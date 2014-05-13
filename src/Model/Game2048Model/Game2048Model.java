@@ -456,9 +456,16 @@ public void setWinFlag(boolean winFlag) {
 	WinFlag = winFlag;
 }
 @Override
-public Node[] GetAvailableMoves(boolean maxPlayer) {
+public Node[]GetAvailableMoves(boolean maxPlayer) {
+			Node[] N=new Node[4];
+			Game2048Model Model=new Game2048Model(this);
+			Model.moveDown();
+			if(!this.isEqual(Model.getData()))
+				N[0]=new Node(Model, 3, maxPlayer);
 				
-}
+				return N; 
+				
+}	
 
 	
 }
