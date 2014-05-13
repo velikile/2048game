@@ -1,0 +1,135 @@
+package Mazepack;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+
+import Model.Game2048Model.Board;
+
+
+public class MazeBoard extends Board {
+		 private Maze maze;
+		 int mousex=-1;
+		 int mousey=-1;
+		 boolean mouseflag=false;
+		 boolean mouseInBoundflag=false;
+		protected boolean cheeseFlag=false;
+	public MazeBoard(final Composite parent, int style) {
+		super(parent, style);
+	}
+	
+	public void SetBoard(int [][] data) {
+		maze=new Maze(data.clone());
+		addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e ) {
+				
+				mouseflag=true;
+				mousex=e.x;
+				mousey=e.y;
+				
+			}
+
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				mousex=-1;
+				mousey=-1;
+				mouseflag=false;
+				redraw();
+				// TODO Auto-generated method stub
+				
+			}});
+		addListener(SWT.MouseMove, new Listener(){
+
+			@Override
+			public void handleEvent(Event e) {
+				mousex=e.x;
+				mousey=e.y;
+				if(mouseflag==true)
+				redraw();
+				
+			}});
+		addPaintListener(new PaintListener(){
+			Image cheese=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/cheese.gif");
+			Image cheese2;
+			
+			
+			Image mouse=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/mouse.gif");
+			Image mouse2;//=new Image(getDisplay(),mouse.getImageData().scaledTo(width/21-1,height/21-1));
+			@Override
+			public void paintControl(PaintEvent e) {
+			//	Image Cheese=new Image(getDisplay(),"cheese.gif");
+				//FileDialog Fd=new FileDialog();
+//				Image mouse=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/mouse.gif");
+				//Image mouse2=new Image(getDisplay(),mouse.getImageData().scaledTo(20,20));
+				int width=getParent().getBounds().width;
+				int height=getParent().getBounds().height;
+				mouse2=new Image(getDisplay(),mouse.getImageData().scaledTo(width/21-1,height/21-1));
+				cheese2=new Image(getDisplay(),cheese.getImageData().scaledTo(width/21-1,height/21-1));
+				   for(int i=0;i<maze.getRow();i++)
+					   for (int j=0;j<maze.getCol();j++){
+						   if(maze.getValue(i, j)==-1){
+							   e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK)); 
+							   e.gc.fillRectangle(i*width/21+1,j*height/21+1,width/21-1,height/21-1);}
+							   else if(maze.getValue(i,j)==1){
+								   e.gc.drawImage(mouse2,i*width/21 ,j*height/21+1);
+							   if(mousex>i*width/23&&mousex<i*width/23+width/5&&mousey>j*height/23&&mousey<j*height/23+height/5)
+								   mouseInBoundflag=true;
+							   else if(mouseflag)
+								   mouseInBoundflag=false;
+							   
+							  
+							   }
+							   else if(maze.getValue(i,j)==2){
+								   e.gc.drawImage(cheese2,i*width/21 ,j*height/21+1);
+				
+					if(mousex!=-1&&mousey!=-1&&mouseflag==true){
+						if(mouse2!=null&&mouseInBoundflag){
+						e.gc.drawImage(mouse2,mousex-10 ,mousey-10);
+						
+						}
+					}}}
+				   if(cheese2!=null&&mouse2!=null){
+					   
+				   cheese2.dispose();
+				   mouse2.dispose();}
+					 e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+					e.gc.drawText("The score is: "+Score , 30,22*height/29+10);
+					e.gc.drawText("The BEST score is: "+ MaxScore , 150,22*height/29+10);
+				
+			}});
+				
+	}
+	public Maze GetMaze	(){
+		return maze;
+		
+		
+	}
+
+		
+	
+
+
+
+}
