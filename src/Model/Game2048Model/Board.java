@@ -23,6 +23,7 @@ protected int MaxScore=0;
  int height;
  int width;
 public Board(final Composite parent,int style){
+	
 	super(parent, style);
 	parent.setSize(660,600);
 	parent.setLocation(100,100);
@@ -45,7 +46,7 @@ addPaintListener(new PaintListener(){
 				colors[8]=getDisplay().getSystemColor(SWT.COLOR_DARK_RED);
 				colors[9]=getDisplay().getSystemColor(SWT.COLOR_MAGENTA);
 				
-				Font font = new Font(getDisplay(),"ariel",25,SWT.BOLD );  
+				Font font = new Font(getDisplay(),"ariel",13,SWT.BOLD );
 		if(boardData!=null){
 			int row=boardData.length;
 			int col=boardData[0].length;
@@ -117,13 +118,13 @@ addPaintListener(new PaintListener(){
 						break;
 					}
 					}
-					e.gc.fillRoundRectangle(i*width/6,j*height/6,width/6-15,height/6-15, 20,20 );
+					e.gc.fillRoundRectangle(i*width/(row+row/2),j*height/(col+col/2),width/(row+row/2)-(row+row/2),height/(col+col/2)-(col+col/2), 10,10 );
 					e.gc.setFont(font);
 					if(boardData[j][i]!=0){
 						if(boardData[j][i]!=1024&&boardData[j][i]!=512&&boardData[j][i]!=2&&boardData[j][i]!=32&&boardData[j][i]!=64)
 					e.gc.setForeground(new Color(getDisplay(), 255,255,255));
 						if(boardData[j][i]<10)
-							e.gc.drawString(""+boardData[j][i], i*width/6+width/17, j*height/6+height/22);
+							e.gc.drawString(""+boardData[j][i], i*width/(row+row/2)+width/(row*row+(row-1)*(row-1)), j*height/(col+col/2)+height/col*2-50);
 						else if(boardData[j][i]<1000&&boardData[j][i]>100)
 							e.gc.drawString(""+boardData[j][i], i*width/6+width/25, j*height/6+height/22);
 						else if(boardData[j][i]>1000)
@@ -141,8 +142,9 @@ addPaintListener(new PaintListener(){
 					
 					
 				}
+			
 			e.gc.dispose();
-				}
+				}font.dispose();
 			}
 			
 		

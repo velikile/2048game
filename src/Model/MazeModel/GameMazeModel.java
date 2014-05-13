@@ -19,6 +19,7 @@ import Model.Model;
 import Mazepack.Maze;
 import Mazepack.Spot;
 import Mazepack.State;
+import Solver.Node;
 public class GameMazeModel extends Observable implements Model {
 	private Maze maze;
 	private int Score=0;
@@ -373,6 +374,12 @@ public Stack<String> getUndoList() {
 
 	public void setWinFlag(boolean winFlag) {
 		WinFlag = winFlag;
+	}
+
+	@Override
+	public Node[] GetAvailableMoves(boolean maxPlayer) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import com.sun.media.sound.DataPusher;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -36,7 +37,7 @@ public class Game2048Model extends Observable implements Model {
 		Score=0;
 	}
 	public Game2048Model(){
-		Data=new int[4][4];
+		Data=new int[10][10];
 		Random r=new Random();
 		int x=new Random().nextInt(10);
 		if(x==9)
@@ -258,7 +259,7 @@ public class Game2048Model extends Observable implements Model {
 		for(int a=0;a<row;a++)
 			for (int b=0;b<col;b++){//checking for close matchups
 				if(Data[a][b]==0){
-					free.add(a*4+b);}
+					free.add(a*row+b);}
 				
 				}
 		return free;
@@ -266,6 +267,8 @@ public class Game2048Model extends Observable implements Model {
 
 }
 	public void AddRandom(int [][]Data){ 	
+		int row=Data.length;
+		int col=Data[0].length;
 		int x=new Random().nextInt(10);
 		ArrayList<Integer> FreeCells=FreeSpaces();
 		int free=new Random().nextInt(FreeCells.size());
@@ -273,8 +276,8 @@ public class Game2048Model extends Observable implements Model {
 			x=4;
 		else 
 			x=2;
-		int a=(int)FreeCells.toArray()[free]%4;
-		int b=(int)FreeCells.toArray()[free]/4;
+		int a=(int)FreeCells.toArray()[free]%col;
+		int b=(int)FreeCells.toArray()[free]/row;
 		Data[b][a]=x;
 			}
 
@@ -293,23 +296,28 @@ public class Game2048Model extends Observable implements Model {
 			numberOfValues++;
 			if(a+1<4&&b+1<4){
 			if(Data[a][b]==Data[a+1][b]){
-				counter++;}
+				counter++;
+				return false;}
 			if(Data[a][b]==Data[a][b+1])
-				counter++;}
+				counter++;
+			return false;}
 			 if(b+1==4&&a<3){
 				if(Data[a][b]==Data[a+1][b]){
-					counter++;}
+					counter++;
+					return false;}
 		}
 			 if(a+1==4&&b<3){
 				if(Data[a][b]==Data[a][b+1]){
-					counter++;}
+					counter++;
+					return false;}
 		}
 			if(a+1==4&&b+1==4){
 				if(Data[a][b]==Data[a][b-1]||Data[a][b]==Data[a-1][b]){
-					counter++;}
+					counter++;
+					return false;}
 		}
 	}}
-if (counter==0&&numberOfValues==16){
+if (counter==0&&numberOfValues==col*row){
 	return true;}
 else return false;
 }
@@ -356,20 +364,22 @@ public boolean equals(Model M){
 	}
 @Override
 public void NewGame() {
-	Data=new int[4][4];
+	int row=Data.length;
+	int col=Data[0].length;
+	Data=new int[row][col];
 	Random r=new Random();
 	int x=r.nextInt(10);
 	if(x==9)
 		x=4;
 	else
 		x=2;
-	Data[r.nextInt(4)][r.nextInt(4)]=x-2;
-	Data[r.nextInt(4)][r.nextInt(4)]=x;
+	Data[r.nextInt(row)][r.nextInt(col)]=x-2;
+	Data[r.nextInt(row)][r.nextInt(col)]=x;
 	if(MaxScore<Score)
 		MaxScore=Score;
 	Score=0;
 	UndoList.clear();
-	Scores=new int [1000];
+	Scores=new int [row*col*row*col];
 	WinFlag=false;
 	Notify();
 }
