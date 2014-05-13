@@ -3,6 +3,7 @@ package Model.Game2048Model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import Model.Model;
 import Model.MazeModel.GameMazeModel;
 import Solver.Node;
 
-public class Game2048Model extends Observable implements Model {
+public class Game2048Model extends Observable implements Model,Serializable{
 	private int [][] Data;
 	private int Score;
 	private int MaxScore;
@@ -37,16 +38,28 @@ public class Game2048Model extends Observable implements Model {
 		Score=0;
 	}
 	public Game2048Model(){
-		Data=new int[10][10];
+		Data=new int[4][4];
+		int row=Data.length;
+		int col=Data[0].length;
 		Random r=new Random();
 		int x=new Random().nextInt(10);
 		if(x==9)
 			x=4;
 		else
 			x=2;
-		Data[r.nextInt(4)][r.nextInt(4)]=x;
-		Data[r.nextInt(4)][r.nextInt(4)]=x-2;
+		Data[r.nextInt(row)][r.nextInt(col)]=x;
+		Data[r.nextInt(row)][r.nextInt(col)]=x-2;
 		
+	}
+	@Override
+	public String toString(){
+	String Board=new String();
+	for(int i[]:Data){
+		Board+="\n";
+		for(int j:i)
+			Board+=j;
+	}
+		return Board;
 	}
 	public Game2048Model(int[][] boardData, int score) {
 		this.Data=boardData.clone();

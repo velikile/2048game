@@ -20,4 +20,5 @@ public interface Model {
 	void UndoMove();
 	boolean SaveGame(String string);
 	Node [] GetAvailableMoves(boolean maxPlayer);
+	
 }
