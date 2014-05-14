@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 public class Board extends Canvas {
-int [][] boardData;
+public int [][] boardData;
 protected int Score=0;
 protected int MaxScore=0;
  int height;
@@ -28,25 +28,38 @@ public Board(final Composite parent,int style){
 	parent.setSize(660,600);
 	parent.setLocation(100,100);
 addPaintListener(new PaintListener(){
-
+	Image Tile2=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/2.gif");
+	Image Tile2new;
+	Image Tile4=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/4.gif");
+	Image Tile4new;
+	Image Tile8=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/8.gif");
+	Image Tile8new;
+	Image Tile16=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/16.gif");
+	Image Tile16new;
+	Image Tile32=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/32.gif");
+	Image Tile32new;
+	Image Tile64=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/64.gif");
+	Image Tile64new;
+	Image Tile128=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/128.gif");
+	Image Tile128new;
+	Image Tile256=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/256.gif");
+	Image Tile256new;
+	Image Tile512=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/512.gif");
+	Image Tile512new;
+	Image Tile1024=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/1024.gif");
+	Image Tile1024new;
+	Image Tile2048=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/2048.gif");
+	Image Tile2048new;
+	Image Tile4096=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/4096.gif");
+	Image Tile4096new;
+	Image Tile8192=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/8192.gif");
+	Image Tile8192new;
+	Image Tile16384=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/16384.gif");
+	Image Tile16384new;
 	@Override
 	public void paintControl(PaintEvent e) {
 		height=parent.getBounds().height;
 		width=parent.getBounds().width;
-		
-		 Color[] colors=new Color[10];
-				colors[0]=getDisplay().getSystemColor(SWT.COLOR_GRAY);
-				colors[1]=getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
-				colors[2]=getDisplay().getSystemColor(SWT.COLOR_DARK_YELLOW);
-				colors[3]=getDisplay().getSystemColor(SWT.COLOR_RED);
-				colors[4]=getDisplay().getSystemColor(SWT.COLOR_CYAN);
-				colors[5]=getDisplay().getSystemColor(SWT.COLOR_GREEN);
-				colors[6]=new Color(getDisplay(), 255,165,0);
-				colors[7]=getDisplay().getSystemColor(SWT.COLOR_DARK_CYAN);
-				colors[8]=getDisplay().getSystemColor(SWT.COLOR_DARK_RED);
-				colors[9]=getDisplay().getSystemColor(SWT.COLOR_MAGENTA);
-				
-				Font font = new Font(getDisplay(),"ariel",13,SWT.BOLD );
 		if(boardData!=null){
 			int row=boardData.length;
 			int col=boardData[0].length;
@@ -56,82 +69,90 @@ addPaintListener(new PaintListener(){
 					
 					switch (boardData[j][i]){
 					case 2:{
-						e.gc.setForeground(new Color(getDisplay(), 0,0,0));
-						e.gc.setBackground(colors[0]);
+						Tile2new=new Image(getDisplay(),Tile2.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile2new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 						
 					case 4:{
-						e.gc.setForeground(new Color(getDisplay(), 0,0,0));
-						e.gc.setBackground(colors[1]);
+						Tile4new=new Image(getDisplay(),Tile4.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile4new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					
 					case 8:{
-						e.gc.setForeground(new Color(getDisplay(), 0,0,0));
-						e.gc.setBackground(colors[2]);
+						Tile8new=new Image(getDisplay(),Tile8.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile8new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					case 16:{
-						e.gc.setBackground(colors[3]);
+						Tile16new=new Image(getDisplay(),Tile16.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile16new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 						
 					case 32:{
-						e.gc.setForeground(new Color(getDisplay(), 125,125,125));
-						e.gc.setBackground(colors[4]);
+						Tile32new=new Image(getDisplay(),Tile32.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));						
+						e.gc.drawImage(Tile32new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					
 					case 64:{
-						e.gc.setForeground(new Color(getDisplay(), 80,80,80));
-						e.gc.setBackground(colors[5]);
+						Tile64new=new Image(getDisplay(),Tile64.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile64new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
+						
 					}
 					case 128:{
-						e.gc.setBackground(colors[6]);
+						Tile128new=new Image(getDisplay(),Tile128.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile128new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 						
 					case 256:{
-						e.gc.setBackground(colors[7]);
+						Tile256new=new Image(getDisplay(),Tile256.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile256new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					
 					case 512:{
-						e.gc.setBackground(colors[8]);
+						Tile512new=new Image(getDisplay(),Tile512.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile512new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					case 1024:{
-						e.gc.setBackground(colors[9]);
+						Tile1024new=new Image(getDisplay(),Tile1024.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile1024new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 						
 					case 2048:{
-						e.gc.setBackground(new Color(getDisplay(),0,0,0));
-						e.gc.setForeground(new Color(getDisplay(),0,0,0));
+						Tile2048new=new Image(getDisplay(),Tile2048.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile2048new,i*width/(row+row/2),j*height/(col+col/2));
+						break;
+					}
+					case 4096:{
+						Tile4096new=new Image(getDisplay(),Tile4096.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile4096new,i*width/(row+row/2),j*height/(col+col/2));
+						break;
+					}
+					case 8192:{
+						Tile8192new=new Image(getDisplay(),Tile8192.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile8192new,i*width/(row+row/2),j*height/(col+col/2));
+						break;
+					}
+					case 16384:{
+						Tile16384new=new Image(getDisplay(),Tile16384.getImageData().scaledTo(width/(row+row/2),height/(col+col/2)));
+						e.gc.drawImage(Tile16384new,i*width/(row+row/2),j*height/(col+col/2));
 						break;
 					}
 					
 					default:{
-						e.gc.setBackground(new Color(getDisplay(), 255,255,255));
+						
 						break;
 					}
 					}
-					e.gc.fillRoundRectangle(i*width/(row+row/2),j*height/(col+col/2),width/(row+row/2)-(row+row/2),height/(col+col/2)-(col+col/2), 10,10 );
-					e.gc.setFont(font);
-					if(boardData[j][i]!=0){
-						if(boardData[j][i]!=1024&&boardData[j][i]!=512&&boardData[j][i]!=2&&boardData[j][i]!=32&&boardData[j][i]!=64)
-					e.gc.setForeground(new Color(getDisplay(), 255,255,255));
-						if(boardData[j][i]<10)
-							e.gc.drawString(""+boardData[j][i], i*width/(row+row/2)+width/(row*row+(row-1)*(row-1)), j*height/(col+col/2)+height/col*2-50);
-						else if(boardData[j][i]<1000&&boardData[j][i]>100)
-							e.gc.drawString(""+boardData[j][i], i*width/6+width/25, j*height/6+height/22);
-						else if(boardData[j][i]>1000)
-					e.gc.drawString(""+boardData[j][i], i*width/6+width/50, j*height/6+height/22);
-						else
-						e.gc.drawString(""+boardData[j][i], i*width/6+width/20, j*height/6+height/22);
-					}
+					
 					
 					e.gc.setForeground(new Color(getDisplay(), 0,0,0));
 					e.gc.setBackground(new Color(getDisplay(), 255,255,255));
@@ -144,7 +165,35 @@ addPaintListener(new PaintListener(){
 				}
 			
 			e.gc.dispose();
-				}font.dispose();
+			if(Tile2new!=null)
+			 Tile2new.dispose();
+			if(Tile4new!=null)
+			 Tile4new.dispose();
+			if(Tile8new!=null)
+			 Tile8new.dispose();
+			if(Tile16new!=null)
+			 Tile16new.dispose();
+			if(Tile32new!=null)
+			  Tile32new.dispose();
+			if(Tile64new!=null)
+			 Tile64new.dispose();
+			if(Tile128new!=null)
+			 Tile128new.dispose();
+			if(Tile256new!=null)
+			 Tile256new.dispose();
+			if(Tile512new!=null)
+			 Tile512new.dispose();
+			if(Tile1024new!=null)
+			 Tile1024new.dispose();
+			if(Tile2048new!=null)
+			 Tile2048new.dispose();
+			if(Tile4096new!=null)
+			 Tile4096new.dispose();
+			if(Tile8192new!=null)
+			 Tile8192new.dispose();
+			if(Tile16384new!=null)
+			Tile16384new.dispose();
+				}
 			}
 			
 		

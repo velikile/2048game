@@ -49,13 +49,13 @@ public class MazeView extends Observable implements View,Runnable {
 	boolean doublekeyFlag=false;
 	static Stack <KeyEvent> keys=new Stack<KeyEvent>();
 
-	
 	public MazeView() {
 	
 	}
 
 	@Override
 	public void displayData(final int[][] data) {
+		
 		mazeboard.SetBoard(data);
 			mazeboard.redraw();	
 			}
@@ -343,23 +343,10 @@ public class MazeView extends Observable implements View,Runnable {
 					userCommand="";
 					int width=mazeboard.getParent().getBounds().width;
 					int height=mazeboard.getParent().getBounds().height;
-					if(mazeboard.GetMaze()!=null){
-					
-					for(int i=0;i<mazeboard.GetMaze().getRow();i++)
-						   for (int j=0;j<mazeboard.GetMaze().getRow();j++){
-							    if(mazeboard.GetMaze().getValue(i,j)==1){
-							    	mouseloc.y=j;
-							    	mouseloc.x=i;
-							  }}}
-			
-					
-					if(e.x>mouseloc.x*width/21+1&&mouseloc.x*width/21+1+width/21-1>e.x&&e.y>mouseloc.y*height/21+1&&e.y<mouseloc.y*width/21+1+width/21-1)
-						{xenter=e.x;
+							xenter=e.x;
 							yenter=e.y;
-						}
-					else {xenter=0;
-					yenter=0;}
-					userCommand=null;
+						
+					 
 				}	
 
 				@Override

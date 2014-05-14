@@ -12,7 +12,7 @@ public int [][] M;
  private State gst=new State();
  
 @SuppressWarnings("unused")
-public Maze()throws InterruptedException{
+public Maze() throws InterruptedException{
 if(Global.CheeseX>Global.Col_maze||Global.CheeseY>Global.Row_maze)
 	throw new InterruptedException("Invalid Cheese Spot"); 
 if(Global.MiceX>Global.Col_maze||Global.MiceY>Global.Row_maze)

@@ -38,7 +38,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		Score=0;
 	}
 	public Game2048Model(){
-		Data=new int[4][4];
+		Data=new int[2][2];
 		int row=Data.length;
 		int col=Data[0].length;
 		Random r=new Random();
@@ -54,10 +54,14 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	@Override
 	public String toString(){
 	String Board=new String();
+	boolean first=true;
 	for(int i[]:Data){
+		if(!first){
 		Board+="\n";
-		for(int j:i)
+		}
+		for(int j:i){
 			Board+=j;
+			first=false;}
 	}
 		return Board;
 	}
@@ -284,6 +288,8 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		int col=Data[0].length;
 		int x=new Random().nextInt(10);
 		ArrayList<Integer> FreeCells=FreeSpaces();
+		if(FreeCells.isEmpty())
+			return;
 		int free=new Random().nextInt(FreeCells.size());
 		if(x==9)
 			x=4;
@@ -307,32 +313,32 @@ public class Game2048Model extends Observable implements Model,Serializable{
 			}
 			if(Data[a][b]!=0)
 			numberOfValues++;
-			if(a+1<4&&b+1<4){
+			if(a+1<row&&b+1<col){
 			if(Data[a][b]==Data[a+1][b]){
 				counter++;
 				return false;}
-			if(Data[a][b]==Data[a][b+1])
+			if(Data[a][b]==Data[a][b+1]){
 				counter++;
-			return false;}
-			 if(b+1==4&&a<3){
+			return false;}}
+			 if(b+1==col&&a<row-1){
 				if(Data[a][b]==Data[a+1][b]){
 					counter++;
 					return false;}
 		}
-			 if(a+1==4&&b<3){
+			 if(a+1==row&&b<col-1){
 				if(Data[a][b]==Data[a][b+1]){
 					counter++;
 					return false;}
 		}
-			if(a+1==4&&b+1==4){
+			if(a+1==row&&b+1==col){
 				if(Data[a][b]==Data[a][b-1]||Data[a][b]==Data[a-1][b]){
 					counter++;
 					return false;}
 		}
 	}}
-if (counter==0&&numberOfValues==col*row){
+if (counter==0&&numberOfValues==row*col){
 	return true;}
-else return false;
+return false;
 }
 public boolean isEqual(int [][]data){
 	if(data!=null){
@@ -344,7 +350,7 @@ public boolean isEqual(int [][]data){
 				if(data[a][b]==Data[a][b])
 					counter++;
 			}
-		if (counter==16){
+		if (counter==row*col){
 			return true;}
 		else 
 			return false;
@@ -392,9 +398,8 @@ public void NewGame() {
 		MaxScore=Score;
 	Score=0;
 	UndoList.clear();
-	Scores=new int [row*col*row*col];
+	Scores=new int [2048];
 	WinFlag=false;
-	Notify();
 }
 @Override
 public void Notify() {
@@ -428,8 +433,6 @@ public boolean LoadGame() {
 	WinFlag=A.isWinFlag();
 	if(A.MaxScore>this.MaxScore)
 	this.MaxScore=A.MaxScore;}catch(Exception e){}
-	
-	
 	Notify();
 	return true;
 }

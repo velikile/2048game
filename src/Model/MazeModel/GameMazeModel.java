@@ -154,16 +154,18 @@ public class GameMazeModel extends Observable implements Model {
 		// TODO Auto-generated method stub
 		try {
 			maze=new Maze();
+			maze.PrintMaze();
 			now=maze.getSstate();
 			goal=maze.getGstate();
 			Score=0;
 			this.UndoList=new Stack<String>();
 			
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Notify();
+		
 	}
 
 	@Override

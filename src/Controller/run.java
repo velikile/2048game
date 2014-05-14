@@ -46,10 +46,10 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class run {
 	public static void main(String[] args) throws InterruptedException {
 
-		//GameMazeModel gm=new GameMazeModel();
-		//MazeView gmb=new MazeView();
-		 Game2048Model gm=new Game2048Model();
-		 Game2048View gmb=new Game2048View();
+		GameMazeModel gm=new GameMazeModel();
+		MazeView gmb=new MazeView();
+		 //Game2048Model gm=new Game2048Model();
+		 //Game2048View gmb=new Game2048View();
 		Presenter P=new Presenter(gmb,gm);
 		gmb.addObserver(P);
 		gm.addObserver(P);

@@ -87,20 +87,15 @@ public class Presenter implements Observer{
 			 }
 		 else if(UserCommand==9){//new game
 			 model.NewGame();
-			ui.getBoard().SetBoard(model.getData());
 			ui.getBoard().SetScore(0);
-			ui.getBoard().redraw();
 			ui.getBoard().setFocus();
-			
+		
 		}
 		 else if(UserCommand==10){//undomove
-			 ui.displayData(model.getData());
 				model.UndoMove();
 				ui.getBoard().SetScore(model.GetScore());
-				ui.getBoard().SetBoard(model.getData());
+				ui.getBoard().setFocus();	
 				
-				ui.displayData(model.getData());
-				ui.getBoard().setFocus();
 				
 		}
 		 else if(UserCommand==11){//save game
@@ -126,9 +121,9 @@ public class Presenter implements Observer{
 			
 			CustomDialog D=new CustomDialog(ui.getBoard().getShell()){};
 			if(model.isWinFlag())
-				D.setMessage("You Won \nyour Sore is "+ model.GetScore());
+				D.setMessage("You Won \nyour Score is "+ model.GetScore());
 			else
-			D.setMessage("Game Over \nyour Sore is "+ model.GetScore());
+			D.setMessage("Game Over \nyour Score is "+ model.GetScore());
 			 D.open();
 			 if(D.isExitFlag())
 			 System.exit(1);
