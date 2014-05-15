@@ -9,31 +9,33 @@ import java.net.Socket;
 
 import Model.Model;
 import Model.Game2048Model.Game2048Model;
+import Solver.Node;
 
 public class TCPServer {
-	
-	
-		private static boolean timeOutFlag=false;
-	 public static void main(String argv[]) throws Exception     
+				int depth=4;
+				
+	 public  void StartServer() throws Exception     
 	 {  
 		 String clientSentence;          
 		 String capitalizedSentence;     
 		 ServerSocket welcomeSocket = new ServerSocket(6789);        
-		 while(!timeOutFlag)          {
+		 while(true){
 			 Socket connectionSocket = welcomeSocket.accept();
 			 connectionSocket.setSoTimeout(10);
-			 
 			 ObjectInputStream  input =  new ObjectInputStream(connectionSocket.getInputStream());
 			 Model M=(Model) input.readObject();
 			 DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());    
 			 capitalizedSentence = GetTheBestMove(M) + M+ '\n';      
 			 outToClient.writeBytes(capitalizedSentence);     
-			 if(connectionSocket.isClosed())
-				 timeOutFlag=true;
+			
 		 }  
 		 }
-	private static String GetTheBestMove(Model m) {
-		// TODO Auto-generated method stub
-		return null;
+	private  String GetTheBestMove(Model m) {
+		String move=null;// the Decision will be here
+		Node DTree=new Node(m,depth,true);//Decision Tree for the Model
+		
+		return move;
+		
+		
 	} 
 }

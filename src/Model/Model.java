@@ -19,6 +19,8 @@ public interface Model {
 	boolean LoadGame();
 	void UndoMove();
 	boolean SaveGame(String string);
-	Node [] GetAvailableMoves(boolean maxPlayer);
+	String [] GetAvailableMoves();
+	public void AddRandom();
+	
 	
 }

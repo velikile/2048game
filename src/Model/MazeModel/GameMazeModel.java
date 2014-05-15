@@ -379,8 +379,8 @@ public Stack<String> getUndoList() {
 	}
 
 	@Override
-	public Node[] GetAvailableMoves(boolean maxPlayer) {
-		// TODO Auto-generated method stub
+	public String[] GetAvailableMoves() {
+		
 		return null;
 	}
 	

@@ -118,7 +118,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Score+=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 		AddRandom(Data);
+ 			Notify();
 // 	setChanged();
 // 	notifyObservers();
  	}
@@ -164,7 +164,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
-		AddRandom(Data);
+ 			Notify();
 //		setChanged();
 //	 	notifyObservers();
 		}
@@ -209,7 +209,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 		AddRandom(Data);
+ 			Notify();
 // 		setChanged();
 // 	 	this.notifyObservers();
  	 	}
@@ -253,7 +253,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 		AddRandom(Data);
+ 			Notify();
  			
  		}
 	
@@ -283,7 +283,8 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	
 
 }
-	public void AddRandom(int [][]Data){ 	
+	@Override
+	public void AddRandom(){ 	
 		int row=Data.length;
 		int col=Data[0].length;
 		int x=new Random().nextInt(10);
@@ -482,16 +483,30 @@ public void setWinFlag(boolean winFlag) {
 	WinFlag = winFlag;
 }
 @Override
-public Node[]GetAvailableMoves(boolean maxPlayer) {
-			Node[] N=new Node[4];
-			Game2048Model Model=new Game2048Model(this);
-			Model.moveDown();
-			if(!this.isEqual(Model.getData()))
-				N[0]=new Node(Model, 3, maxPlayer);
+public String []GetAvailableMoves() {
+	Game2048Model Model=new Game2048Model(this);
+	String[] Moves=new String[4];
+	Model.moveDown(); 
+	if(!isEqual(Model.getData())){
+		Model=new Game2048Model(this);
+		Moves[0]="down";}
+	Model.moveUp();
+	if(!isEqual(Model.getData())){
+		Model=new Game2048Model(this);
+		Moves[1]="up";}
+	Model.moveLeft();
+	if(!isEqual(Model.getData())){
+		Model=new Game2048Model(this);
+		Moves[2]="left";}
+	
+	Model.moveRight();
+	if(!isEqual(Model.getData())){
+		Model=new Game2048Model(this);
+		Moves[3]="right";}
+		return Moves;
+		}
 				
-				return N; 
-				
-}	
+	
 
 	
 }

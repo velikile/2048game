@@ -36,7 +36,8 @@ public class Presenter implements Observer{
 	@Override
 	public void update(Observable subject, Object arg1) {
 	
-	
+		if(subject.getClass().toString().contains("Model"))
+				model.AddRandom();
 		int UserCommand=ui.getUserCommand();
 		if(UserCommand==13){
 			System.exit(1);
