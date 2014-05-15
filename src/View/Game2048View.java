@@ -33,7 +33,10 @@ public class Game2048View extends Observable implements View,Runnable {
 	private Button undoMoveButton;
 	private Button SaveGameButton;
 	private Button LoadGameButton;
+	private Button AIButton;
+	private Button HintButton;
 	private String userCommand;
+	
 	public Game2048View() {
 	}
 
@@ -189,7 +192,39 @@ public  int getUserCommand() {
 				userCommand="undoMove";
 				Notify();
 			}});
+		AIButton=new Button(shell, SWT.PUSH);
+		AIButton.setText("Run AI");
+		//AIButton.setLayoutData(new GridData(SWT.FILL,SWT.LEFT,false,false,1,1));
+		//AIButton.setAlignment(SWT.CENTER);
+		AIButton.addSelectionListener(new SelectionListener(){
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
 
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				userCommand="AIGame";
+				Notify();
+			}});
+		HintButton=new Button(shell, SWT.PUSH);
+		HintButton.setText("Show A Hint");
+		HintButton.addSelectionListener(new SelectionListener(){
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				userCommand="Hint";
+				Notify();
+			}});
+		
 		SaveGameButton=new Button(shell, SWT.PUSH);
 		SaveGameButton.setText("Save Game");
 		SaveGameButton.addSelectionListener(new SelectionListener(){

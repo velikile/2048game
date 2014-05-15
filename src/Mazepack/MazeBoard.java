@@ -28,10 +28,10 @@ public class MazeBoard extends Board {
 		 boolean mouseflag=false;
 		 boolean mouseInBoundflag=false;
 		protected boolean cheeseFlag=false;
-		boolean ListenersSet=false;
+		
 	public MazeBoard(final Composite parent, int style) {
 		super(parent, style);
-		if(!ListenersSet){
+		
 		addMouseListener(new MouseListener(){
 
 			@Override
@@ -115,8 +115,7 @@ public class MazeBoard extends Board {
 					//e.gc.dispose();
 				
 			}});
-		ListenersSet=true;
-		}
+		
 	}
 	
 	public void SetBoard(final int [][] data) {

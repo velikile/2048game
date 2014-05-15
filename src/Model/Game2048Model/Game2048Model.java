@@ -38,7 +38,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		Score=0;
 	}
 	public Game2048Model(){
-		Data=new int[2][2];
+		Data=new int[4][4];
 		int row=Data.length;
 		int col=Data[0].length;
 		Random r=new Random();
