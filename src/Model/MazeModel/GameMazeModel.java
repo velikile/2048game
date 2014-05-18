@@ -368,11 +368,7 @@ public Stack<String> getUndoList() {
 		
 	}
 
-	@Override
-	public boolean isWinFlag() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 	public void setWinFlag(boolean winFlag) {
 		WinFlag = winFlag;
@@ -382,6 +378,36 @@ public Stack<String> getUndoList() {
 	public String[] GetAvailableMoves() {
 		
 		return null;
+	}
+
+	@Override
+	public void AddRandom() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean GameWon() {
+
+		if(WinFlag)
+			return true;
+		else return false;
+	}
+
+	@Override
+	public void AIPlayer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int CountEmptyCells() {//counts the cells which are not a wall
+		int counter=0;
+		for(int[]a:maze.GetData())
+			for (int b:a)
+				if(b!=-1)
+					counter++;
+		return counter;
 	}
 	
 	

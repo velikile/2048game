@@ -83,6 +83,14 @@ public  int getUserCommand() {
 				userCommand="";
 				 x=13;
 			}
+			else if(userCommand=="AIGame"){
+				userCommand="";
+				 x=14;
+			}
+			else if(userCommand=="Hint"){
+				userCommand="";
+				 x=15;
+			}
 
 			
 	return x;

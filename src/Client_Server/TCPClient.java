@@ -10,24 +10,29 @@ import Model.Model;
 
 
 public class TCPClient {
-	private Model M;
-	public TCPClient(Model M){
-	this.M=M;
+	 private String Hint=null;
+	public TCPClient(Model M) throws Exception{
+		setHint(ConnectAndGethint(M));
 	}
-	  public String ConnectAndGethint() throws Exception  {  
+	  public String ConnectAndGethint(Model M) throws Exception  {  
 		String sentence;  
-		String modifiedSentence;
-		BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));  
+		String modifiedSentence;  
 		Socket clientSocket = new Socket("localhost", 6789); 
 		ObjectOutputStream output=new ObjectOutputStream(clientSocket.getOutputStream());
 		output.writeObject(M);
 		output.flush();
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  
-		sentence = inFromUser.readLine();   
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));     
 		modifiedSentence = inFromServer.readLine();  
-		//System.out.println("FROM SERVER: " + modifiedSentence); 
+		System.out.println("FROM SERVER: " + modifiedSentence); 
 	clientSocket.close();
 	return modifiedSentence;}
+	  
+	public String getHint() {
+		return Hint;
+	}
+	public void setHint(String hint) {
+		Hint = hint;
+	}
 	
 }

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import Client_Server.TCPClient;
 import Model.Model;
 import Model.Game2048Model.Game2048Model;
 import Model.MazeModel.GameMazeModel;
@@ -25,6 +26,7 @@ import View.View;
 public class Presenter implements Observer{
 	View ui;
 	Model model;
+	String Hint=null;
 	public Presenter(View v,Model m) {
 		 ui=v;
 		 model=m;
@@ -116,12 +118,31 @@ public class Presenter implements Observer{
 			 ui.getBoard().SetMaxScore(model.getMaxScore());
 			 ui.getBoard().setFocus();
 		}
+		 else if(UserCommand==15){//Give me A hint
+			 try {
+				String Hint=new TCPClient(model).getHint();
+				switch(Hint){
+				case "right":{model.moveRight();break;}
+				case "left":{model.moveLeft();break;}
+				case "up":{model.moveUp();break;}
+				case "down":{model.moveDown();break;}
+				}
+				ui.getBoard().setFocus();
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}}
+			 else if(UserCommand==14){//just play the solution
+				 	model.AIPlayer();	
+				 
+			 }
 		 
 		 ui.displayData(model.getData());
-		 if(model.GameOver()||model.isWinFlag()){
+		 if(model.GameOver()||model.GameWon()){
 			
 			CustomDialog D=new CustomDialog(ui.getBoard().getShell()){};
-			if(model.isWinFlag())
+			if(model.GameWon())
 				D.setMessage("You Won \nyour Score is "+ model.GetScore());
 			else
 			D.setMessage("Game Over \nyour Score is "+ model.GetScore());
@@ -149,8 +170,8 @@ public class Presenter implements Observer{
 			ui.displayData(model.getData());	
 	
 	
+	
 	}
-		
 		}
 	
 		

@@ -15,12 +15,14 @@ public interface Model {
 	void Notify();
 	int GetScore();
 	int getMaxScore();
-	boolean isWinFlag();
 	boolean LoadGame();
 	void UndoMove();
 	boolean SaveGame(String string);
 	String [] GetAvailableMoves();
 	public void AddRandom();
+	boolean GameWon();
+	void AIPlayer();
+	int CountEmptyCells();
 	
 	
 }

@@ -20,6 +20,7 @@ import com.sun.media.sound.DataPusher;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+import Client_Server.TCPClient;
 import Mazepack.Maze;
 import Mazepack.State;
 import Model.Model;
@@ -33,8 +34,10 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	private boolean WinFlag=false;
 	private int Scores[]=new int [1024];
 	private Stack<int [][]> UndoList=new Stack<int [][]>();
+	private String Hint = null;
 	public Game2048Model(int [][] Data){
-		this.Data=Data.clone();
+		
+		this.SetData(Data);
 		Score=0;
 	}
 	public Game2048Model(){
@@ -66,11 +69,11 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		return Board;
 	}
 	public Game2048Model(int[][] boardData, int score) {
-		this.Data=boardData.clone();
+		SetData(boardData);
 		Score=score;
 	}
 	public Game2048Model(Game2048Model A) {
-		this.Data=A.getData();
+		this.SetData(A.Data);
 		this.Score=A.getScore();
 		this.UndoList=A.getUndoList();
 		this.Scores=A.getScores();
@@ -119,8 +122,6 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			if(Score>MaxScore)
  				MaxScore=Score;
  			Notify();
-// 	setChanged();
-// 	notifyObservers();
  	}
 					
 					}
@@ -165,8 +166,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			if(Score>MaxScore)
  				MaxScore=Score;
  			Notify();
-//		setChanged();
-//	 	notifyObservers();
+
 		}
 		
 	}
@@ -210,8 +210,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			if(Score>MaxScore)
  				MaxScore=Score;
  			Notify();
-// 		setChanged();
-// 	 	this.notifyObservers();
+
  	 	}
 	}
 
@@ -264,8 +263,13 @@ public class Game2048Model extends Observable implements Model,Serializable{
 
 	@Override
 	public int[][] getData() {
-		// TODO Auto-generated method stub
-		return Data;
+		int[][] temp=new int[Data.length][Data[0].length] ;
+		int row=Data.length;
+		int col=Data[0].length;
+		for(int a=0;a<row;a++)
+			for (int b=0;b<col;b++){
+				temp[a][b]=Data[a][b];}
+		return temp;
 	}
 	public ArrayList<Integer> FreeSpaces(){
 		
@@ -431,7 +435,7 @@ public boolean LoadGame() {
 	this.UndoList=A.getUndoList();
 	this.Score=A.Score;
 	this.setScores(A.getScores());
-	WinFlag=A.isWinFlag();
+	WinFlag=A.GameWon();
 	if(A.MaxScore>this.MaxScore)
 	this.MaxScore=A.MaxScore;}catch(Exception e){}
 	Notify();
@@ -460,8 +464,6 @@ public boolean SaveGame(String string) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	
-	
 	return true;
 }
 
@@ -475,10 +477,7 @@ public int[] getScores() {
 public void setScores(int scores[]) {
 	Scores = scores;
 }
-@Override
-public boolean isWinFlag() {
-	return WinFlag;
-}
+
 public void setWinFlag(boolean winFlag) {
 	WinFlag = winFlag;
 }
@@ -486,7 +485,7 @@ public void setWinFlag(boolean winFlag) {
 public String []GetAvailableMoves() {
 	Game2048Model Model=new Game2048Model(this);
 	String[] Moves=new String[4];
-	Model.moveDown(); 
+		Model.moveDown(); 
 	if(!isEqual(Model.getData())){
 		Model=new Game2048Model(this);
 		Moves[0]="down";}
@@ -505,6 +504,77 @@ public String []GetAvailableMoves() {
 		Moves[3]="right";}
 		return Moves;
 		}
+public void SetData(int[][] data2) {
+	int row=data2.length;
+	int col=data2[0].length;
+	Data=new int[row][col];
+	for(int i=0;i<row;i++)
+		for (int j=0;j<col;j++)
+			Data[i][j]=data2[i][j];
+		
+}
+@Override
+public boolean GameWon() {
+if(WinFlag)
+	return true;
+return false;
+}
+@Override
+public void AIPlayer() {
+	
+	final Game2048Model TempModel=this;
+	 new Thread(new Runnable(){
+
+		@Override
+		public void run() {
+			 while(!GameOver()){
+				 	try {
+					Hint = new TCPClient(TempModel).getHint();
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					}
+				 	try {
+				 		Thread.sleep(1000);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				 	System.out.println("after 1 seconds");
+					
+		}
+			
+		}}).start();
+	 
+	 try {
+		Thread.sleep(2000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	
+	 switch(Hint){
+		case "right":{moveRight();
+		break;}
+		case "left":{moveLeft();
+		break;}
+		case "up":{moveUp();
+		break;}
+		case "down":{moveDown();
+		break;}
+		}
+	 }
+}
+@Override
+public int CountEmptyCells() {
+	int counter=0;
+	for(int a[]:Data)
+		for(int b:a){
+			if(b==0)
+				counter++;
+			
+		}
+	return counter;
+}
 				
 	
 
