@@ -40,6 +40,7 @@ public class Presenter implements Observer{
 	
 		if(subject.getClass().toString().contains("Model"))
 				model.AddRandom();
+		else{
 		int UserCommand=ui.getUserCommand();
 		if(UserCommand==13){
 			System.exit(1);
@@ -135,7 +136,7 @@ public class Presenter implements Observer{
 			}}
 			 else if(UserCommand==14){//just play the solution
 				 	model.AIPlayer();	
-				 
+			 } 
 			 }
 		 
 		 ui.displayData(model.getData());

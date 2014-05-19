@@ -50,6 +50,7 @@ import View.Game2048View;
 
 
 
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -58,21 +59,21 @@ public class run {
 
 		//GameMazeModel gm=new GameMazeModel();
 		//MazeView gmb=new MazeView();
-		new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				TCPServer TS=new TCPServer(5,new Game2048H());
-				try {
-					TS.StartServer();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-			}}).start();
-
+//		new Thread(new Runnable(){
+//
+//			@Override
+//			public void run() {
+//			
+//				try {
+//					TS.StartServer();
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				
+//				
+//			}}).start();
+		
 		 Game2048Model gm=new Game2048Model();
 		 Game2048View gmb=new Game2048View();
 		Presenter P=new Presenter(gmb,gm);

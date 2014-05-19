@@ -10,13 +10,13 @@ public class Game2048H implements Huristics {
 			return Integer.MIN_VALUE;
 		else if(N.getState().GameWon())
 			return Integer.MAX_VALUE;
-		return (int) (N.getState().GetScore()+Math.sin(N.getState().CountEmptyCells()));
+		return (int) (N.getState().GetScore()+N.getState().CountEmptyCells())*VectorScore(N.getState().getData());
 	}
 	
 	public int VectorScore(int Data[][]){
 		int score=0;
 		for(int i=0;i<Data.length-1;i++)
-			for (int j=0;i<Data[0].length;j++){
+			for (int j=0;j<Data[0].length-1;j++){
 					if(Data[i][j]<=Data[i+1][j])
 						score++;
 					else score--;
@@ -24,7 +24,10 @@ public class Game2048H implements Huristics {
 						score++;
 					else score--;
 					
-					
+					if(i>0&&i<Data.length-1&&j>0&&j<Data.length-1 &&GetMaxValue(Data)==Data[i][j]){
+						score-=20;
+						
+					}
 				
 				
 			}

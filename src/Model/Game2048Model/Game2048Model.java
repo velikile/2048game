@@ -535,12 +535,11 @@ public void AIPlayer() {
 						e.printStackTrace();
 					}
 				 	try {
-				 		Thread.sleep(1000);
+				 		Thread.sleep(4000);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				 	System.out.println("after 1 seconds");
 					
 		}
 			
