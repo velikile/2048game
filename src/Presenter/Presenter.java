@@ -121,25 +121,26 @@ public class Presenter implements Observer{
 		}
 		 else if(UserCommand==15){//Give me A hint
 			 try {
-				String Hint=new TCPClient(model).getHint();
-				switch(Hint){
-				case "right":{model.moveRight();break;}
-				case "left":{model.moveLeft();break;}
-				case "up":{model.moveUp();break;}
-				case "down":{model.moveDown();break;}
-				}
-				ui.getBoard().setFocus();
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}}
+					String Hint=new TCPClient(model.getData(),model.GetScore()).getHint();
+					switch(Hint){
+					case "Right":{model.moveRight();break;}
+					case "Left":{model.moveLeft();break;}
+					case "Up":{model.moveUp();break;}
+					case "Down":{model.moveDown();break;}
+					}
+					ui.getBoard().SetScore(model.GetScore());
+					ui.getBoard().setFocus();
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}}
 			 else if(UserCommand==14){//just play the solution
-				 	model.AIPlayer();	
-			 } 
+				 ui.getBoard().SetScore(model.GetScore());
+				 ui.AIPlayer();
+				 
 			 }
-		 
-		 ui.displayData(model.getData());
+		ui.displayData(model.getData());
 		 if(model.GameOver()||model.GameWon()){
 			
 			CustomDialog D=new CustomDialog(ui.getBoard().getShell()){};
@@ -168,12 +169,12 @@ public class Presenter implements Observer{
 				ui.getBoard().redraw();
 				ui.getBoard().setFocus();}
 		}
-			ui.displayData(model.getData());	
+		 ui.getBoard().redraw();
 	
 	
 	
 	}
-		}
+		}}
 	
 		
 		

@@ -6,12 +6,14 @@ import Model.Model;
 import Model.Game2048Model.Game2048Model;
 
 public class Node {
-private int Val;
+private double Val;
 private int depth;
 private boolean MaxPlayer;
 private Node[] Children;
 private String lastMove;
 private Game2048Model State;
+
+
 public  Node(){
 	State=new Game2048Model();
 	depth=5;
@@ -126,11 +128,11 @@ public String getLastMove(){
 public int getDepth(){
 	return depth;
 }
-public void setVal(int Val) {
+public void setVal(double Val) {
 	this.Val=Val;
 	
 }
-public int getVal() {
+public double getVal() {
 return Val;
 }
 	

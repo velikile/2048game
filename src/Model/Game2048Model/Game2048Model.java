@@ -522,47 +522,63 @@ return false;
 @Override
 public void AIPlayer() {
 	
-	final Game2048Model TempModel=this;
-	 new Thread(new Runnable(){
-
-		@Override
-		public void run() {
-			 while(!GameOver()){
-				 	try {
-					Hint = new TCPClient(TempModel).getHint();
-					} catch (Exception e) {
-						
-						e.printStackTrace();
-					}
-				 	try {
-				 		Thread.sleep(4000);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-		}
-			
-		}}).start();
+	//final Game2048Model TempModel=this;
+//	 new Thread(new Runnable(){
+//
+//		@Override
+//		public void run() {
+//			 for(int i=0;i<4;i++){
+//				 	try {
+//					
+//					System.out.println(Hint);
+//					} catch (Exception e) {
+//						
+//						e.printStackTrace();
+//					}
+//				 	try {
+//				 		Thread.sleep(1000);
+//					} catch (Exception e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					
+//		}
+//			
+//		}}).start();
+//	 
+//	 try {
+//		Thread.sleep(1000);
+//	} catch (InterruptedException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//		System.out.println(Hint);
+//	for(int i=0;i<4;i++){
+//	try {
+//		Hint = new TCPClient(TempModel).getHint();
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	 try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	 moveRight();
+//	 switch(Hint){
+//		case "right":{moveRight();
+//		break;}
+//		case "left":{moveLeft();
+//		break;}
+//		case "up":{moveUp();
+//		break;}
+//		case "down":{moveDown();
+//		break;}
+//		}
+	}
 	 
-	 try {
-		Thread.sleep(2000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	
-	 switch(Hint){
-		case "right":{moveRight();
-		break;}
-		case "left":{moveLeft();
-		break;}
-		case "up":{moveUp();
-		break;}
-		case "down":{moveDown();
-		break;}
-		}
-	 }
-}
+
 @Override
 public int CountEmptyCells() {
 	int counter=0;

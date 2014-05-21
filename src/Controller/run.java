@@ -55,7 +55,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class run {
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws Exception {
 
 		//GameMazeModel gm=new GameMazeModel();
 		//MazeView gmb=new MazeView();
@@ -73,12 +73,13 @@ public class run {
 //				
 //				
 //			}}).start();
-		
+		//TCPServer TS=new TCPServer(5,new Game2048H());
 		 Game2048Model gm=new Game2048Model();
 		 Game2048View gmb=new Game2048View();
 		Presenter P=new Presenter(gmb,gm);
 		gmb.addObserver(P);
 		gm.addObserver(P);
+		
 		//		 Node N=new Node();
 //		 boolean first=false;
 //		  System.out.println(N.getState()+"\n");

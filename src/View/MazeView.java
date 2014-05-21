@@ -236,13 +236,12 @@ public class MazeView extends Observable implements View,Runnable {
 					Notify();
 				}});
 
-			LoadGameButton=new Button(shell, SWT.PUSH);;
+			LoadGameButton=new Button(shell, SWT.PUSH);
 			LoadGameButton.setText("Load Game");
 			LoadGameButton.addSelectionListener(new SelectionListener(){
 
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
-					
 					
 				}
 
@@ -253,8 +252,6 @@ public class MazeView extends Observable implements View,Runnable {
 				}});
 
 			mazeboard.addKeyListener(new KeyListener(){
-				
-				
 				private long lastpress=0;
 
 				@Override
@@ -410,6 +407,12 @@ public class MazeView extends Observable implements View,Runnable {
 	@Override
 	public Board getBoard() {
 		return mazeboard;
+	}
+
+	@Override
+	public void AIPlayer() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	}

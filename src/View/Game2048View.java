@@ -2,6 +2,7 @@ package View;
 
 import java.util.Observable;
 
+import Client_Server.TCPClient;
 import Model.Game2048Model.*;
 
 import org.eclipse.swt.SWT;
@@ -249,7 +250,7 @@ public  int getUserCommand() {
 				Notify();
 			}});
 
-		LoadGameButton=new Button(shell, SWT.PUSH);;
+		LoadGameButton=new Button(shell, SWT.PUSH);
 		LoadGameButton.setText("Load Game");
 		LoadGameButton.addSelectionListener(new SelectionListener(){
 
@@ -349,6 +350,49 @@ public  int getUserCommand() {
 		}
 	public Board getBoard(){
 		return board;
+		
+	}
+
+
+	@Override
+	public void AIPlayer() {	
+		new Thread(new Runnable(){
+
+	@Override
+	public void run() {String hint=null;
+	while(true){
+		try {
+		hint=new TCPClient(board.boardData,board.GetScore()).getHint();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}switch(hint){
+		case "Right":{userCommand="right";break; }
+		case "Up":{userCommand="up";break;}
+		case "Down":{userCommand="down";break;}
+		case "Left":{userCommand="left";break;}
+		
+		}try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(display.isDisposed())
+			return;
+		display.syncExec(new Runnable(){
+
+			@Override
+			public void run() {
+				Notify();
+				
+			}});
+	
+	}
+		
+		
+		
+	}}).start();		
 		
 	}
 	

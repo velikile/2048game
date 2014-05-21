@@ -8,7 +8,7 @@ public class runServer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-			TCPServer TS=new TCPServer(5,new Game2048H());
+			TCPServer TS=new TCPServer(7,new Game2048H());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

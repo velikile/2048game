@@ -11,15 +11,16 @@ import Model.Model;
 
 public class TCPClient {
 	 private String Hint=null;
-	public TCPClient(Model M) throws Exception{
-		setHint(ConnectAndGethint(M));
+	public TCPClient(int [][] Data,int Score) throws Exception{
+		setHint(ConnectAndGethint(Data,Score));
 	}
-	  public String ConnectAndGethint(Model M) throws Exception  {  
+	  public String ConnectAndGethint(int [][]Data,int Score) throws Exception  {  
 		String sentence;  
 		String modifiedSentence;  
 		Socket clientSocket = new Socket("localhost", 6789); 
 		ObjectOutputStream output=new ObjectOutputStream(clientSocket.getOutputStream());
-		output.writeObject(M);
+		output.writeObject(Data);
+		output.writeInt(Score);
 		output.flush();
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));     

@@ -11,4 +11,5 @@ public interface View {
 public void displayData(int[][] data);
 public Board getBoard();
 public int getUserCommand();
+public void AIPlayer();
 }
