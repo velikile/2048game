@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import Model.Model;
 import Model.Game2048Model.Game2048Model;
-
 public class Node {
 private double Val;
 private int depth;
@@ -112,9 +111,7 @@ public Node[] getChildren(){
 }
 
 public int Huristic(){
-	return State.getScore();
-	
-	
+	return State.GetScore();	
 }
 public Model getState(){
 	return State;

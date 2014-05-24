@@ -1,4 +1,4 @@
-package Model.Game2048Model;
+package View;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,15 +16,32 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author Lev veliki
+ * This is a class for the gui of the 2048 game 
+ * uses SWT for the graphics component
+ * 
+ *
+ */
+
 public class Board extends Canvas {
 public int [][] boardData;
 protected int Score=0;
 protected int MaxScore=0;
  int height;
  int width;
+ 
+ /**
+  * 
+  * @param parent
+  * @param style
+  * start the whole thing 
+  * 
+  */
 public Board(final Composite parent,int style){
-	
 	super(parent, style);
+	final Font F=new Font(getDisplay(), "Arial",30,SWT.BOLD);
 	parent.setSize(660,600);
 	parent.setLocation(100,100);
 addPaintListener(new PaintListener(){
@@ -157,11 +174,11 @@ addPaintListener(new PaintListener(){
 					}
 					
 					
-					e.gc.setForeground(new Color(getDisplay(), 0,0,0));
-					e.gc.setBackground(new Color(getDisplay(), 255,255,255));
-					
-					e.gc.drawString("The Score is: "+Score,width/4, height-190);
-					e.gc.drawString("Heighest Score is: "+MaxScore, width/4,height-150);
+					e.gc.setForeground(new Color(getDisplay(), 50,50,50));
+					e.gc.setBackground((getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)));
+					e.gc.setFont(F);
+					e.gc.drawString("The Score is: "+Score,width/15, height-height/3);
+					//e.gc.drawString("Heighest Score is: "+MaxScore, width/4,height-150);
 					//e.gc.setForeground(new Color(getDisplay(), 255,255,255));
 					
 					
@@ -205,6 +222,11 @@ addPaintListener(new PaintListener(){
 
 
 }
+/**
+ *
+ * @param data
+ * setting the game board data to the data passed
+ */
 public void SetBoard(int[][] data) {
 	int row=data.length;
 	int col=data[0].length;
@@ -214,21 +236,37 @@ public void SetBoard(int[][] data) {
 			boardData[i][j]=data[i][j];		
 	
 }
+/**
+ * 
+ * @param Score
+ * setting the score manually 
+ */
 public void SetScore(int Score){
 	this.Score=Score;
 	
 	
 }
+/**
+ * 
+ * @param MaxScore
+ * setting the best score so far manually
+ */
 public void SetMaxScore(int MaxScore){
 	this.MaxScore=MaxScore;
-	
-	
+
 }
+/**
+ * 
+ * @return Score
+ * returns the Score;
+ */
 public int GetScore(){
 	return this.Score;
-	
-	
 }
+	/**
+	 *@return MaxScore
+	 * returns the best score so far
+	 */
 public int  GetMaxScore(){
 	return this.MaxScore;
 	

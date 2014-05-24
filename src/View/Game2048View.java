@@ -38,13 +38,10 @@ public class Game2048View extends Observable implements View,Runnable {
 	private Button HintButton;
 	private String userCommand;
 	
-	public Game2048View() {
-	}
-
-
 	@Override
 	public void displayData(final int[][] boardData) {
 		board.SetBoard(boardData);
+		if(!board.isDisposed())
 			board.redraw();
 	}
 
@@ -355,22 +352,28 @@ public  int getUserCommand() {
 
 
 	@Override
-	public void AIPlayer() {	
+	public void AIPlayer(final TCPClient C,final int TreeDepth,final int numberOfMoves ){	
 		new Thread(new Runnable(){
 
 	@Override
-	public void run() {String hint=null;
-	while(true){
-		try {
-		hint=new TCPClient(board.boardData,board.GetScore()).getHint();
-		} catch (Exception e) {
+	public void run() {
+		String hint=null;
+		for(int i=0;i<numberOfMoves;i++){
+			try {
+				if(C.isServerUp())
+				hint=C.Send2Server(board.boardData, board.GetScore(),TreeDepth);
+			} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}switch(hint){
-		case "Right":{userCommand="right";break; }
-		case "Up":{userCommand="up";break;}
-		case "Down":{userCommand="down";break;}
-		case "Left":{userCommand="left";break;}
+			
+			}
+			if(hint==null)
+				break;
+			switch(hint){
+			case "RIGHT":{userCommand="right";break; }
+			case "UP":{userCommand="up";break;}
+			case "DOWN":{userCommand="down";break;}
+			case "LEFT":{userCommand="left";break;}
 		
 		}try {
 			Thread.sleep(50);
@@ -379,7 +382,7 @@ public  int getUserCommand() {
 			e.printStackTrace();
 		}
 		if(display.isDisposed())
-			return;
+			System.exit(1);
 		display.syncExec(new Runnable(){
 
 			@Override
@@ -394,6 +397,15 @@ public  int getUserCommand() {
 		
 	}}).start();		
 		
+	}
+	/**
+	 * Refreshes the canvas side of the gui
+	 */
+	@Override
+	public void Refresh() {
+		if(!display.isDisposed())
+			this.board.redraw();
+		this.board.setFocus();
 	}
 	
 

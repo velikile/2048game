@@ -27,12 +27,17 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import Client_Server.TCPClient;
 import Mazepack.Maze;
-import Mazepack.MazeBoard;
-import Model.Game2048Model.Board;
 import Model.MazeModel.GameMazeModel;
 
-
+/**
+ * 
+ * 
+ * @author Lev veliki
+ * this is The view Side for the maze game
+ *
+ */
 public class MazeView extends Observable implements View,Runnable {
 	private Display display;
 	private Shell shell;
@@ -49,17 +54,19 @@ public class MazeView extends Observable implements View,Runnable {
 	boolean doublekeyFlag=false;
 	static Stack <KeyEvent> keys=new Stack<KeyEvent>();
 
-	public MazeView() {
-	
-	}
-
+	/**
+	 * Sets the data and redraw the gui
+	 */
 	@Override
 	public void displayData(final int[][] data) {
-		
 		mazeboard.SetBoard(data);
 			mazeboard.redraw();	
 			}
 
+	/**
+	 * @return userCommand
+	 * this return an int which represent the user command
+	 */
 	@Override
 	public int getUserCommand() {
 		
@@ -116,7 +123,9 @@ public class MazeView extends Observable implements View,Runnable {
 		 	
 		return x;
 	}
-
+/**
+ * start the gui components
+ */
 	private void initComponents(){
 			shell = new Shell();
 			shell.setLayout(new GridLayout(2, false));
@@ -383,7 +392,9 @@ public class MazeView extends Observable implements View,Runnable {
 			
 	}
 
-
+	/**
+	 * this is the Runnable method to run this gui in a new thread;
+	 */
 	@Override
 	public void run() {
 		
@@ -396,24 +407,37 @@ public class MazeView extends Observable implements View,Runnable {
 					display.dispose();
 					T.cancel();
 			}
-				
+	/**
+	 * notifies the observers 				
+	 */
 
 	public void Notify(){
 		this.setChanged();
 		this.notifyObservers();
 		
 	}
-
+	/**	
+	 * @return Board 
+	 * return the graphical component of the gui 
+	 */
 	@Override
 	public Board getBoard() {
 		return mazeboard;
 	}
 
 	@Override
-	public void AIPlayer() {
+	public void AIPlayer(TCPClient C,int numberOfMoves,int TreeDepth){
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void Refresh() {
+		if(!display.isDisposed())
+			mazeboard.redraw();
+	}
+
+	
 
 	}
 

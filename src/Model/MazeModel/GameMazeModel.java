@@ -2,33 +2,28 @@ package Model.MazeModel;
 
 import java.io.FileNotFoundException;
 import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Observable;
 import java.util.Stack;
 
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-
 import Model.Model;
 import Mazepack.Maze;
 import Mazepack.Spot;
 import Mazepack.State;
-import Solver.Node;
 public class GameMazeModel extends Observable implements Model {
-	private Maze maze;
-	private int Score=0;
-	private int MaxScore=0;
-	private State now; 
-	private State goal;
-	boolean Flag=true;
-	private Stack<String> UndoList=new Stack<String>();
-	private boolean WinFlag;
+	private Maze maze; // the maze type to store the game board
+	private int Score=0;// current score
+	private int MaxScore=0;// the best Score so far
+	private State now;  //current position
+	private State goal;//goal characteristics 
+	boolean Flag=true; //this flag is for the undo button if this flag is false then undo is pressed and score is reduced 
+	private Stack<String> UndoList=new Stack<String>();//this holds all of the moves so far in the game 
+	private boolean WinFlag;//  a flag to see if the game is won 
+	
 	public GameMazeModel(){
 		try {
 			maze=new Maze();
@@ -41,6 +36,11 @@ public class GameMazeModel extends Observable implements Model {
 		}
 	}
 		
+	/**
+	 * 
+	 * @param A
+	 * Copy Ctor
+	 */
 		public GameMazeModel(GameMazeModel A){
 			maze=new Maze(A.getData());
 			now=new State(A.now);
@@ -57,6 +57,12 @@ public class GameMazeModel extends Observable implements Model {
 		
 		
 	}
+		
+
+/**
+ * moving the game piece up
+ * 
+ */
 	@Override
 	public void moveUp() {
 		
@@ -78,6 +84,10 @@ public class GameMazeModel extends Observable implements Model {
 				
 	}
 
+/**
+ * moving the game piece down
+ * 
+ */
 	@Override
 	public void moveDown() {
 		if(maze.getValue(now.getSpot().getx(), now.getSpot().gety()+1)!=-1){
@@ -98,6 +108,10 @@ public class GameMazeModel extends Observable implements Model {
 		
 	}
 
+/**
+ * moving the game piece left
+ * 
+ */
 	@Override
 	public void moveLeft() {
 		if(maze.getValue(now.getSpot().getx()-1, now.getSpot().gety())!=-1){
@@ -117,6 +131,10 @@ public class GameMazeModel extends Observable implements Model {
 		
 	}
 
+/**
+ * moving the game piece right
+ * 
+ */
 	@Override
 	public void moveRight() {
 		if(maze.getValue(now.getSpot().getx()+1, now.getSpot().gety())!=-1){
@@ -134,12 +152,20 @@ public class GameMazeModel extends Observable implements Model {
 		}
 	}
 
+	/**
+	 * @param
+	 * @return BoardData
+	 * returns the Game Board Data
+	 */
 	@Override
 	public int[][] getData() {
 		// TODO Auto-generated method stub
 		return maze.GetData();
 	}
-
+	/**
+	 * @return boolean
+	 * checks to see if you've reached the goal;
+	 */
 	@Override
 	public boolean GameOver() {
 		if(maze.getSstate().isEqual(goal)){
@@ -149,12 +175,16 @@ public class GameMazeModel extends Observable implements Model {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param
+	 * @return 
+	 * Starts a new game
+	 */
 	@Override
 	public void NewGame() {
-		// TODO Auto-generated method stub
 		try {
 			maze=new Maze();
-			maze.PrintMaze();
 			now=maze.getSstate();
 			goal=maze.getGstate();
 			Score=0;
@@ -175,7 +205,6 @@ public class GameMazeModel extends Observable implements Model {
 		// TODO Auto-generated method stub
 
 	}
-
 	@Override
 	public int GetScore() {
 		// TODO Auto-generated method stub
@@ -203,9 +232,9 @@ public class GameMazeModel extends Observable implements Model {
 		this.Flag=A.Flag;
 		this.MaxScore=A.MaxScore;
 		this.UndoList=A.getUndoList();}
-		catch(Exception e){}
-		
-		
+		catch(Exception e){
+			
+		}
 		Notify();
 		System.out.println("gameLoaded");
 		// TODO Auto-generated method stub
@@ -281,8 +310,9 @@ public class GameMazeModel extends Observable implements Model {
 			writer = new PrintWriter(MazeModel);
 			xstream.toXML(A,writer);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+			System.out.println("Can't save the game");
+			return false;
 		}
 		//writer.print(xml);
 		System.out.println("gameSaved");
@@ -394,21 +424,6 @@ public Stack<String> getUndoList() {
 		else return false;
 	}
 
-	@Override
-	public void AIPlayer() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int CountEmptyCells() {//counts the cells which are not a wall
-		int counter=0;
-		for(int[]a:maze.GetData())
-			for (int b:a)
-				if(b!=-1)
-					counter++;
-		return counter;
-	}
 	
 	
 }

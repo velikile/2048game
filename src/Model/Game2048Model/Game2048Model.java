@@ -5,55 +5,65 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import com.sun.media.sound.DataPusher;
+import Model.Model;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-
-import Client_Server.TCPClient;
-import Mazepack.Maze;
-import Mazepack.State;
-import Model.Model;
-import Model.MazeModel.GameMazeModel;
-import Solver.Node;
-
+/**
+ * @author Lev veliki
+ * The class stores the data associated with the Game
+ */
 public class Game2048Model extends Observable implements Model,Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int [][] Data;
 	private int Score;
 	private int MaxScore;
 	private boolean WinFlag=false;
-	private int Scores[]=new int [1024];
+	private int Scores[]=new int [2048];
 	private Stack<int [][]> UndoList=new Stack<int [][]>();
-	private String Hint = null;
 	public Game2048Model(int [][] Data){
 		
 		this.SetData(Data);
 		Score=0;
 	}
+	/**
+	 * Default Ctor
+	 * 
+	 */
 	public Game2048Model(){
-		Data=new int[4][4];
+		Data=new int[4][4];//this is the size of the Board
 		int row=Data.length;
 		int col=Data[0].length;
 		Random r=new Random();
 		int x=new Random().nextInt(10);
-		if(x==9)
-			x=4;
-		else
-			x=2;
-		Data[r.nextInt(row)][r.nextInt(col)]=x;
-		Data[r.nextInt(row)][r.nextInt(col)]=x-2;
+		if(x==9){
+			Data[r.nextInt(row)][r.nextInt(col)]=4;
+			Data[r.nextInt(row)][r.nextInt(col)]=2;}
+		else{
+			Data[r.nextInt(row)][r.nextInt(col)]=1024;
+			Data[r.nextInt(row)][r.nextInt(col)]=1024;
+		}
+		
 		
 	}
+	/**
+	 * 
+	 * @return Board 
+	 *	return the Game Data as a String 
+	 * 
+	 */
+	
+	
 	@Override
 	public String toString(){
 	String Board=new String();
@@ -68,17 +78,35 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	}
 		return Board;
 	}
+	/**
+	 * 
+	 * @param boardData
+	 * @param score
+	 * A simply Ctor for a slim version of the Model
+	 */
+	
 	public Game2048Model(int[][] boardData, int score) {
 		SetData(boardData);
 		Score=score;
 	}
+	/**
+	 * 
+	 * @param Game2048Model
+	 * A full Copy Ctor 
+	 */
+	
 	public Game2048Model(Game2048Model A) {
 		this.SetData(A.Data);
-		this.Score=A.getScore();
+		this.Score=A.GetScore();
 		this.UndoList=A.getUndoList();
 		this.Scores=A.getScores();
 		this.MaxScore=A.getMaxScore();
 	}
+		
+	/**
+	 * The method is Moving all of the Tiles Up  and Notifies the observers
+	 */
+	
 	@Override
 	public void moveUp() {
 		int row=Data.length;
@@ -121,12 +149,16 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Score+=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			Notify();
+ 			
  	}
 					
 					}
 	
 
+	/**
+	 * The method is Moving all of the Tiles Down and Notifies the observers
+	 *   
+	 */
 	@Override
 	public void moveDown() {
 		int row=Data.length;
@@ -165,12 +197,17 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			Notify();
+ 			
 
 		}
 		
 	}
 
+
+	/**
+	 * The method is Moving all of the Tiles left and notifies the observers 
+	 */
+	
 	@Override
 	public void moveLeft() {
 		int row=Data.length;
@@ -209,11 +246,13 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			Notify();
+ 			
 
  	 	}
 	}
-
+	/**
+	 * The method is Moving all of the Tiles right and notifies the observers
+	 */
 	@Override
 	public void moveRight() {
 	
@@ -252,7 +291,6 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			Notify();
  			
  		}
 	
@@ -260,6 +298,12 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		
 
 	}
+	
+	/**
+	 * @return int[][] 
+	 * returns the Data of the game board 
+	 * 
+	 */
 
 	@Override
 	public int[][] getData() {
@@ -271,6 +315,13 @@ public class Game2048Model extends Observable implements Model,Serializable{
 				temp[a][b]=Data[a][b];}
 		return temp;
 	}
+	
+	/**
+	 * 
+	 * @return ArrayList<Interger>
+	 * returns an array with the indices of the free cells in modulo of the row and col
+	 */
+	
 	public ArrayList<Integer> FreeSpaces(){
 		
 		int row=Data.length;
@@ -287,6 +338,12 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	
 
 }
+	/**
+	 * @return void
+	 * @param void 
+	 * Adds a Random Tile to the Game Board
+	 */
+	
 	@Override
 	public void AddRandom(){ 	
 		int row=Data.length;
@@ -304,6 +361,12 @@ public class Game2048Model extends Observable implements Model,Serializable{
 		int b=(int)FreeCells.toArray()[free]/row;
 		Data[b][a]=x;
 			}
+	/**
+	 * 
+	 * @return boolean
+	 * @param void
+	 * Check if The Game is Over,only returns a true when you lose the game  
+	 */
 
 		
 	public boolean GameOver(){
@@ -321,30 +384,38 @@ public class Game2048Model extends Observable implements Model,Serializable{
 			if(a+1<row&&b+1<col){
 			if(Data[a][b]==Data[a+1][b]){
 				counter++;
-				return false;}
+				}
 			if(Data[a][b]==Data[a][b+1]){
 				counter++;
-			return false;}}
+			}}
 			 if(b+1==col&&a<row-1){
 				if(Data[a][b]==Data[a+1][b]){
 					counter++;
-					return false;}
+					}
 		}
 			 if(a+1==row&&b<col-1){
 				if(Data[a][b]==Data[a][b+1]){
 					counter++;
-					return false;}
+					}
 		}
 			if(a+1==row&&b+1==col){
 				if(Data[a][b]==Data[a][b-1]||Data[a][b]==Data[a-1][b]){
 					counter++;
-					return false;}
+				}
 		}
 	}}
-if (counter==0&&numberOfValues==row*col){
+if (counter==0&&numberOfValues==row*col||WinFlag){
 	return true;}
 return false;
 }
+/**
+ * 
+ * 
+ * @param int [][]data
+ * @return boolean 
+ * Checks whether the game board is equal to the data passed
+ */
+	
 public boolean isEqual(int [][]data){
 	if(data!=null){
 		int row=Data.length;
@@ -366,26 +437,44 @@ public boolean isEqual(int [][]data){
 	
 	
 }
-
+/**
+ * 
+ * @return integer 
+ * this is summing the the number of cubes 
+ */
 public int getSum()
 {	int sum=0;
 	for (int a[]:this.Data)
-		for(int b:a)
-			sum+=b;
+		for(int b:a){
+			if(b!=0)
+			sum+=b;}
 	return sum;
 }
-public int getScore() {
-	return Score;
-}
+
+/**
+ * @return 
+ * @param int score
+ * Setting the score manually 
+ */
 public void setScore(int score) {
 	Score = score;
 }
-
-public boolean equals(Model M){
+/**
+ * 
+ * @param Model
+ * @return true
+ * return true if The game Board is equal to the objects Board
+ */
+public boolean equals(Game2048Model M){
 	if(isEqual(M.getData()))
 		return true;
 	else return false;	
 	}
+/**
+ * @return 
+ * Starts a new Game
+ */
+
 @Override
 public void NewGame() {
 	int row=Data.length;
@@ -393,12 +482,14 @@ public void NewGame() {
 	Data=new int[row][col];
 	Random r=new Random();
 	int x=r.nextInt(10);
-	if(x==9)
-		x=4;
-	else
-		x=2;
-	Data[r.nextInt(row)][r.nextInt(col)]=x-2;
-	Data[r.nextInt(row)][r.nextInt(col)]=x;
+	if(x==9){
+	Data[r.nextInt(row)][r.nextInt(col)]=4;
+	Data[r.nextInt(row)][r.nextInt(col)]=2;}
+	else{
+		Data[r.nextInt(row)][r.nextInt(col)]=2;
+		Data[r.nextInt(row)][r.nextInt(col)]=2;
+	}
+	
 	if(MaxScore<Score)
 		MaxScore=Score;
 	Score=0;
@@ -406,27 +497,46 @@ public void NewGame() {
 	Scores=new int [2048];
 	WinFlag=false;
 }
+/**
+ * A small useful method to Notify Observes
+ */
+
 @Override
 public void Notify() {
 	this.setChanged();
 	notifyObservers();
 	
 }
+
+/**
+ * @return int 
+ * returns the Score of the game
+ */
 @Override
 public int GetScore() {
-	// TODO Auto-generated method stub
 	return Score;
 }
+
+/**
+ * @return int 
+ * returns the Best Score so far 
+ */
 @Override
 public int getMaxScore() {
 	// TODO Auto-generated method stub
 	return MaxScore;
 }
+
+/**
+ * @return boolean  
+ * Load A Game File from Hard drive returns true if the load is successful 
+ */
 @Override
 public boolean LoadGame() {
 	FileDialog FD=new FileDialog(new Shell().getShell());
 	FD.open();
 	String path=FD.getFilterPath()+"\\"+FD.getFileName();
+	
 	File Model=new File(path);
 	XStream xstream=new XStream(new DomDriver());
 	try{
@@ -437,10 +547,25 @@ public boolean LoadGame() {
 	this.setScores(A.getScores());
 	WinFlag=A.GameWon();
 	if(A.MaxScore>this.MaxScore)
-	this.MaxScore=A.MaxScore;}catch(Exception e){}
-	Notify();
+	this.MaxScore=A.MaxScore;}
+	catch(Exception e){
+		return false;
+	}
+	
 	return true;
 }
+/**
+ * 
+ * @param int []Scores
+ * setting the Scores array to the one passed
+ */
+private void setScores(int[] Scores) {
+	this.Scores=Scores;
+	
+}
+/** 
+ * Undo the last move made and notify observes
+ */
 @Override
 public void UndoMove() {
 	WinFlag=false;
@@ -448,8 +573,15 @@ public void UndoMove() {
 	Data=this.UndoList.pop();
 	if(UndoList.size()!=0)
 	Score=Score-Scores[UndoList.size()];
-	Notify();
+	this.setChanged();
+	this.notifyObservers("Undo");
 }
+/**
+ * @return boolean 
+ * @param String 
+ * Taking the Name of the file and saving the current state of the game as an XML type file
+ * return true if Successful
+ */
 @Override
 public boolean SaveGame(String string) {
 	XStream xstream=new XStream(new DomDriver());
@@ -463,24 +595,39 @@ public boolean SaveGame(String string) {
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		return false;
 	}
 	return true;
 }
-
+/**
+ * 
+ * @return Stack<int[][]>
+ * returns all of the game States so far in a Stack organized fashion
+ */
 public Stack<int[][]> getUndoList() {
 	// TODO Auto-generated method stub
 	return UndoList;
 }
+/**
+ * @return int[]
+ * returns the Score array for the game 
+ */
 public int[] getScores() {
 	return Scores;
 }
-public void setScores(int scores[]) {
-	Scores = scores;
-}
 
+/**
+ * 
+ * @param boolean 
+ * Setting the winFlag Manually
+ */
 public void setWinFlag(boolean winFlag) {
 	WinFlag = winFlag;
 }
+/**
+ * @return String[]
+ * returns a String array with all of the available moves from the current state
+ */
 @Override
 public String []GetAvailableMoves() {
 	Game2048Model Model=new Game2048Model(this);
@@ -504,6 +651,11 @@ public String []GetAvailableMoves() {
 		Moves[3]="right";}
 		return Moves;
 		}
+/**
+ * 
+ * @param int [][]
+ * Setting the Game Board to the data passed
+ */
 public void SetData(int[][] data2) {
 	int row=data2.length;
 	int col=data2[0].length;
@@ -513,83 +665,19 @@ public void SetData(int[][] data2) {
 			Data[i][j]=data2[i][j];
 		
 }
+/**
+ * @return boolean
+ * checks if the Game is in Win State
+ */
 @Override
 public boolean GameWon() {
 if(WinFlag)
 	return true;
 return false;
-}
-@Override
-public void AIPlayer() {
-	
-	//final Game2048Model TempModel=this;
-//	 new Thread(new Runnable(){
-//
-//		@Override
-//		public void run() {
-//			 for(int i=0;i<4;i++){
-//				 	try {
-//					
-//					System.out.println(Hint);
-//					} catch (Exception e) {
-//						
-//						e.printStackTrace();
-//					}
-//				 	try {
-//				 		Thread.sleep(1000);
-//					} catch (Exception e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					
-//		}
-//			
-//		}}).start();
-//	 
-//	 try {
-//		Thread.sleep(1000);
-//	} catch (InterruptedException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//		System.out.println(Hint);
-//	for(int i=0;i<4;i++){
-//	try {
-//		Hint = new TCPClient(TempModel).getHint();
-//	} catch (Exception e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	 try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-	 moveRight();
-//	 switch(Hint){
-//		case "right":{moveRight();
-//		break;}
-//		case "left":{moveLeft();
-//		break;}
-//		case "up":{moveUp();
-//		break;}
-//		case "down":{moveDown();
-//		break;}
-//		}
-	}
-	 
+}	
 
-@Override
-public int CountEmptyCells() {
-	int counter=0;
-	for(int a[]:Data)
-		for(int b:a){
-			if(b==0)
-				counter++;
-			
-		}
-	return counter;
-}
+
+
 				
 	
 

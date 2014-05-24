@@ -11,6 +11,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * 
+ * @author Lev veliki
+ * This class is made for the dialog that open when the game is over 
+ *
+ */
+
 public class CustomDialog extends Dialog
 {
     protected String message="" ;

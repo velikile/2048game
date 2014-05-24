@@ -1,15 +1,20 @@
 package View;
 
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Canvas;
+import Client_Server.TCPClient;
 
-import Model.Game2048Model.Board;
+/**
+ * 
+ * @author Lev veliki
+ *
+ *this defines the methods for each view side of the game each Game must implement these methods
+ *
+ */
+
 public interface View {
-
 public void displayData(int[][] data);
 public Board getBoard();
+public void Refresh();
 public int getUserCommand();
-public void AIPlayer();
+public void AIPlayer(TCPClient C,int numberOfMoves, int TreeDepth);
+
 }

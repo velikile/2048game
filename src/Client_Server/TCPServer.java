@@ -1,191 +1,257 @@
 package Client_Server;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Future;
+/**
+ * 
+ * @author Lev veliki
+ * This class holds the Server and everything the Server need to show the solution to the client 
+ *
+ */
 
-import Model.Model;
-import Model.Game2048Model.Game2048Model;
-import Solver.Node;
 
-public class TCPServer {
+public class TCPServer  {
+		Socket Sock=null;
 		String Hint;
 	    static final int SEC=1000;
 		int depth;
-		Huristics H;
-		ExecutorService threadPool=Executors.newFixedThreadPool(10);
+		boolean WantsHint=false;
+		//Future<String>future=null;
+		ExecutorService threadPool=Executors.newFixedThreadPool(1);
+		CompletionService<String> CS=null;
 		
-	public TCPServer(int depth,Huristics H) throws Exception{
-		this.H=H;
-		this.depth=depth;
-		StartServer();
+	
+	public TCPServer(){
 		
-	}			
-	 public  void StartServer() throws Exception   {       
-		 ServerSocket welcomeSocket = new ServerSocket(6789);        
-		 threadPool.execute(new ServerThread(welcomeSocket));
-		 threadPool.shutdown();
-	 }
-	 
-	private  String GetTheBestMove(Node N) {
-		String move=null;
-		double Valone=MiniMax(N,depth,true);
-		//double Valtwo=alphaBeta(N, depth,Integer.MIN_VALUE,Integer.MAX_VALUE, true);
-		//double Valthree=ExpectMax(N,depth,false);
-	//	System.out.println(Valone+"**"+Valtwo+"***"+Valthree);
-		if(N.getChildren()!=null)
-		for(Node a:N.getChildren()){
-			//System.out.println(a.getLastMove()+" Score is :"+a.getVal()+"alpahBeta "+Valthree);
-			//System.out.println(a.getLastMove()+" Score is :"+a.getVal()+"minimax "+Valtwo	);
-			if(Valone==a.getVal()){
-				move=a.getLastMove();}
-		}// the Decision will be here
-		return move;
-		
-	}
-	private double MiniMax(Node n, int depth, boolean maxPlayer) {
-				
-			if(n.TerminalNode()||depth==0){
-				return H.Evaluation(n);}
-			else{
-				double BestVal=0;
-				int Min=Integer.MIN_VALUE;
-				int Max=Integer.MAX_VALUE;
-			if(maxPlayer){
-				BestVal=Min;
-				for(Node a:n.getChildren()){
-				a.setVal(MiniMax(a,depth-1,!maxPlayer));
-				BestVal=Math.max(BestVal,a.getVal());}
-				return BestVal;
-			}	
-			else	{
-				BestVal=Max;
-				for(Node a:n.getChildren()){
-				a.setVal(MiniMax(a,depth-1,!maxPlayer));
-				BestVal=Math.min(BestVal,a.getVal());}
-				return BestVal;
-			}	
-			}
-	}
-	private double ExpectMax(Node n, int depth, boolean RandomEvent) {
-		
-		if(n.TerminalNode()||depth==0){
-			return H.Evaluation(n);}
-		
-			double A=0;
-			double Min=Integer.MIN_VALUE;
-		if(!RandomEvent){
-			A=Min;
-			for(Node a:n.getChildren()){
-				a.setVal(ExpectMax(a,depth-1,RandomEvent));
-				A=Math.max(A,a.getVal());
-				}
-				
-		}	
-		else	{
-			A=0;
-			for(Node a:n.getChildren()){
-			A+=(Probability(a)*ExpectMax(a, depth-1,!RandomEvent));
-			System.out.println(A);
-			}n.setVal(A);	
-		}
-		return A;
-		
-} 
-	
-	
-	private double Probability(Node a) {
-		if(a.getChildren()!=null)
-		if(a.getChildren().length==0)
-			return 1;
-		else if(a.getLastMove()=="add2tile"){
-			return 0.9*(1/a.getState().CountEmptyCells());
-			
-		}
-		else if(a.getLastMove()=="add4tile"){
-			
-			return 0.1*(1/a.getState().CountEmptyCells());
-			
-		}
-		System.out.println(0.1*(1/a.getState().CountEmptyCells()));
-		return 1;
-	}
-	
-	
-	private double alphaBeta(Node n, int depth,double a,double b, boolean maxPlayer) {
-		if(n.TerminalNode()||depth==0){
-			return H.Evaluation(n);}
-		if(maxPlayer)	{
-			for (Node Child:n.getChildren()){
-			a=Math.max(a,alphaBeta(Child,depth-1,a,b,false));
-			Child.setVal(a);
-			if(b<=a)
-				break;
-				
-			}
-			
-			return a;
-		}	
-		else{
-			for (Node Child:n.getChildren()){
-			b=Math.min(b,alphaBeta(Child,depth-1,a,b,true));
-			Child.setVal(b);
-				if(b<=a)
-				break;			
-		}	
-			return b;
-}}
-	
-	
-	
-	class ServerThread extends Thread{
-	ServerSocket welcomeSock;
-	String H=Hint;
-	ServerThread(ServerSocket welcomeSock){
-		this.welcomeSock=welcomeSock;
-		
-	}
-	public void run(){
-	
-		while(true)
+		 ServerSocket welcomeSocket = null;
 		try {
-		Socket Sock = welcomeSock.accept();
-		ObjectInputStream  input =  new ObjectInputStream(Sock.getInputStream());
-		 int [][] Data= (int[][]) input.readObject();
-		 int Score=input.readInt();
-		 Board theGame = new Board(Data,Score);
-	        Direction hint = null;
-			try {
-				hint = AIsolver.findBestMove(theGame, depth);
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	//	 Node Sol=new Node(new Game2048Model(Data,Score),depth,true);
-		 DataOutputStream outToClient = new DataOutputStream(Sock.getOutputStream());    
-		 Hint = hint.toString() + '\n';      
-		 outToClient.writeBytes(Hint);     
-			Sock.close();
-		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			welcomeSocket = new ServerSocket(6789);
+		} catch (IOException e2) {
+			
+			e2.printStackTrace();
+		}
+		 try {
+			welcomeSocket.setSoTimeout(10000*SEC);
+		} catch (SocketException e1) {
+			e1.printStackTrace();
+		}
+		 while(true){
+			 
+		 try {
+			System.out.println("Server is Up and Waiting for Connections..."); 
+			Sock=welcomeSocket.accept();
+		} catch (IOException e) {
+		
 			e.printStackTrace();
 		}
+		 
+			System.out.println("Client is Connected");
 		
-	}
+		 threadPool.execute(new ServerThread(Sock));
+		
+		 }
+	 }			
+	 public String GetHint() {
+		 return Hint;
+		 
+	 }
+	 
+	 	class ServerThread implements Runnable{
+	 		Socket Sock	;
+	 		
+	 		ServerThread(Socket Sock){
+	 			this.Sock=Sock;	
+	 		}
+	 		
+			@Override
+			public void run() {
+				int Score=0;
+				int[][]Data=null;
+				ExecutorService ThreadPool= Executors.newCachedThreadPool();
+				Future<String> future=null;
+				try {		
+					ObjectInputStream input= new ObjectInputStream(Sock.getInputStream());
+					ObjectOutputStream output= new ObjectOutputStream(Sock.getOutputStream());
+						while((Data=(int[][])input.readObject()) != null){
+							Score=(int)input.readObject();
+							depth=(int)input.readObject();							
+							future=ThreadPool.submit(new HintCallable(Data,Score));
+							try {
+								if(future.get()!=null)
+								output.writeObject(future.get());
+								else
+									output.writeObject("No Moves Available");	
+							} 
+								catch (InterruptedException | ExecutionException e1) {
+									System.out.println(e1);
+							}
+					
+						}	
+						output.close();
+						input.close();
+						}
+					 catch (IOException | ClassNotFoundException e) {
+							}
+		
+			}
+						
+	 	}
+				
+				
+			
+	 		
+	 		
+	 	
+	 
+		class HintCallable implements Callable<String>{
+			
+			int [][] Data=null;
+			int Score;
+		
+		HintCallable(int [][]Data,int Score){
+			this.Data=Data;
+			this.Score=Score;
+		}
+
+		@Override
+		public String call() throws Exception {
+			Board theGame = new Board(Data,Score);
+			Direction hint = null;
+			try {
+				hint = AIsolver.findBestMove(theGame, depth);
+				//System.out.println(hint);
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+				return hint.name();
+		}
+		
+	}}
+	 
+//	private  String GetTheBestMove(Node N) {
+//		String move=null;
+//		double Valone=MiniMax(N,depth,true);
+//		if(N.getChildren()!=null)
+//		for(Node a:N.getChildren()){
+//			//System.out.println(a.getLastMove()+" Score is :"+a.getVal()+"alpahBeta "+Valthree);
+//			//System.out.println(a.getLastMove()+" Score is :"+a.getVal()+"minimax "+Valtwo	);
+//			if(Valone==a.getVal()){
+//				move=a.getLastMove();}
+//		}// the Decision will be here
+//		return move;
+//		
+//	}
+//	private double MiniMax(Node n, int depth, boolean maxPlayer) {
+//				
+//			if(n.TerminalNode()||depth==0){
+//				return H.Evaluation(n);}
+//			else{
+//				double BestVal=0;
+//				int Min=Integer.MIN_VALUE;
+//				int Max=Integer.MAX_VALUE;
+//			if(maxPlayer){
+//				BestVal=Min;
+//				for(Node a:n.getChildren()){
+//				a.setVal(MiniMax(a,depth-1,!maxPlayer));
+//				BestVal=Math.max(BestVal,a.getVal());}
+//				return BestVal;
+//			}	
+//			else	{
+//				BestVal=Max;
+//				for(Node a:n.getChildren()){
+//				a.setVal(MiniMax(a,depth-1,!maxPlayer));
+//				BestVal=Math.min(BestVal,a.getVal());}
+//				return BestVal;
+//			}	
+//			}
+//	}
+//	private double ExpectMax(Node n, int depth, boolean RandomEvent) {
+//		
+//		if(n.TerminalNode()||depth==0){
+//			return H.Evaluation(n);}
+//		
+//			double A=0;
+//			double Min=Integer.MIN_VALUE;
+//		if(!RandomEvent){
+//			A=Min;
+//			for(Node a:n.getChildren()){
+//				a.setVal(ExpectMax(a,depth-1,RandomEvent));
+//				A=Math.max(A,a.getVal());
+//				}
+//				
+//		}	
+//		else	{
+//			A=0;
+//			for(Node a:n.getChildren()){
+//			A+=(Probability(a)*ExpectMax(a, depth-1,!RandomEvent));
+//			System.out.println(A);
+//			}n.setVal(A);	
+//		}
+//		return A;
+//		
+//} 
+//	
+//	
+//	private double Probability(Node a) {
+//		if(a.getChildren()!=null)
+//		if(a.getChildren().length==0)
+//			return 1;
+//		else if(a.getLastMove()=="add2tile"){
+//			return 0.9*(1/a.getState().CountEmptyCells());
+//			
+//		}
+//		else if(a.getLastMove()=="add4tile"){
+//			
+//			return 0.1*(1/a.getState().CountEmptyCells());
+//			
+//		}
+//		System.out.println(0.1*(1/a.getState().CountEmptyCells()));
+//		return 1;
+//	}
+//	
+//	
+//	private double alphaBeta(Node n, int depth,double a,double b, boolean maxPlayer) {
+//		if(n.TerminalNode()||depth==0){
+//			return H.Evaluation(n);}
+//		if(maxPlayer)	{
+//			for (Node Child:n.getChildren()){
+//			a=Math.max(a,alphaBeta(Child,depth-1,a,b,false));
+//			Child.setVal(a);
+//			if(b<=a)
+//				break;
+//				
+//			}
+//			
+//			return a;
+//		}	
+//		else{
+//			for (Node Child:n.getChildren()){
+//			b=Math.min(b,alphaBeta(Child,depth-1,a,b,true));
+//			Child.setVal(b);
+//				if(b<=a)
+//				break;			
+//		}	
+//			return b;
+//}}
+//	
 	
-}}
+	
+
 	
 	/* 
 	 * Copyright (C) 2014 Vasilis Vryniotis <bbriniotis at datumbox.com>
@@ -472,23 +538,6 @@ public class TCPServer {
 	    }
 
 	}
-	
-	/* 
-	 * Copyright (C) 2014 Vasilis Vryniotis <bbriniotis at datumbox.com>
-	 *
-	 * This program is free software: you can redistribute it and/or modify
-	 * it under the terms of the GNU General Public License as published by
-	 * the Free Software Foundation, either version 3 of the License, or
-	 * (at your option) any later version.
-	 *
-	 * This program is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	 * GNU General Public License for more details.
-	 *
-	 * You should have received a copy of the GNU General Public License
-	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
 	/**
 	 * Action Status enum.
 	 * 

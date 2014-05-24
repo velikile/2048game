@@ -3,44 +3,64 @@ package Presenter;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import Client_Server.TCPClient;
 import Model.Model;
-import Model.Game2048Model.Game2048Model;
 import Model.MazeModel.GameMazeModel;
 import View.CustomDialog;
+import View.UserDataGui;
 import View.View;
-
+/**
+ * 
+ * @author Lev veliki
+ * This class coordinates between the model and the view class 
+ * using the observer design pettern 
+ */
 public class Presenter implements Observer{
 	View ui;
 	Model model;
 	String Hint=null;
-	public Presenter(View v,Model m) {
+	TCPClient client=null;
+	/**
+	 * 
+	 * 
+	 * @param v
+	 * @param m
+	 * @throws Exception
+	 * initiates the model and the view start a view thread
+	 * starts the client thread;  
+	 * 
+	 */
+	public Presenter(View v, Model m) throws Exception {
 		 ui=v;
 		 model=m;
-		 new Thread((Runnable) ui).start();		  
-		 
+		 new Thread((Runnable) ui).start();
+		 new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				 try {
+					client=new TCPClient(model.getData(),model.GetScore(),false);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 client.Connect();
+				 
+				
+			}}).start();
 		
 	}
-	
+	/**
+	 * each time the Observable is changed and notifies the observers this method is being activated 
+	 * the updates are sent from the view and model 
+	 * 
+	 */
 	@Override
 	public void update(Observable subject, Object arg1) {
-	
-		if(subject.getClass().toString().contains("Model"))
-				model.AddRandom();
-		else{
 		int UserCommand=ui.getUserCommand();
 		if(UserCommand==13){
 			System.exit(1);
@@ -48,24 +68,27 @@ public class Presenter implements Observer{
 		}
 		if(UserCommand==2){//right
 			model.moveRight();
+			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 			}
 		else if(UserCommand==1){//left
 			
 			model.moveLeft();
+			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 		}
 		else if(UserCommand==3){//down
 		
 		model.moveDown();
+		model.AddRandom();
 		ui.getBoard().SetScore(model.GetScore());
 		ui.getBoard().SetMaxScore(model.getMaxScore());
 		}
 		else if(UserCommand==4){//up
-			
 			model.moveUp();
+			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 		 }
@@ -92,58 +115,69 @@ public class Presenter implements Observer{
 		 else if(UserCommand==9){//new game
 			 model.NewGame();
 			ui.getBoard().SetScore(0);
-			ui.getBoard().setFocus();
+			ui.Refresh();
 		
 		}
 		 else if(UserCommand==10){//undomove
 				model.UndoMove();
 				ui.getBoard().SetScore(model.GetScore());
-				ui.getBoard().setFocus();	
+				ui.Refresh();	
 				
 				
 		}
 		 else if(UserCommand==11){//save game
-			 String [] Extensions=new String[1];
-				Extensions[0]=".xml";
-				FileDialog FD=new FileDialog(ui.getBoard().getShell());
-				FD.setFilterExtensions(Extensions);
-				FD.open();
-				model.SaveGame(FD.getFilterPath()+"\\"+FD.getFileName());
-				ui.getBoard().SetScore(model.GetScore());
-				ui.getBoard().SetMaxScore(model.getMaxScore());
-				ui.getBoard().setFocus();
-		}
+			 Save();}
 		 else if(UserCommand==12){//load game
-			 model.LoadGame();
-			 ui.getBoard().SetScore(model.GetScore());
-			 ui.getBoard().SetMaxScore(model.getMaxScore());
-			 ui.getBoard().setFocus();
+			 Load();
 		}
 		 else if(UserCommand==15){//Give me A hint
-			 try {
-					String Hint=new TCPClient(model.getData(),model.GetScore()).getHint();
+			 try {	
+				 if(!client.isServerUp())
+					 client.Connect();
+				 
+				 if(client.isServerUp()){
+				 	Hint=client.Send2Server(model.getData(),model.GetScore(),7);
+				 	if(Hint!=null)
 					switch(Hint){
-					case "Right":{model.moveRight();break;}
-					case "Left":{model.moveLeft();break;}
-					case "Up":{model.moveUp();break;}
-					case "Down":{model.moveDown();break;}
+					case "RIGHT":{model.moveRight();break;}
+					case "LEFT":{model.moveLeft();break;}
+					case "UP":{model.moveUp();break;}
+					case "DOWN":{model.moveDown();break;}
 					}
 					ui.getBoard().SetScore(model.GetScore());
-					ui.getBoard().setFocus();
-					
+					ui.Refresh();
+				 }
+				 else{
+					 MessageBox Box=new MessageBox(new Shell());
+					 Box.setMessage("Server is down at the moment try later please");
+					 Box.open();
+					 
+				 }
+					 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}}
-			 else if(UserCommand==14){//just play the solution
+			 
+			 else if(UserCommand==14){
+				 //just play the solution
+				 if(!client.isServerUp())//if down 
+					 client.Connect();	//try to connect
+				 if(client.isServerUp){
 				 ui.getBoard().SetScore(model.GetScore());
-				 ui.AIPlayer();
+				 UserDataGui Select=new UserDataGui(ui.getBoard().getDisplay());
+				 ui.AIPlayer(client,Select.getTreeHeight(),Select.getNumberOfMoves());}
+				 else{
+					 MessageBox Box=new MessageBox(new Shell());
+					 Box.setMessage("Server is down at the moment try later please");
+					 Box.open();
+					 
+				 }
 				 
 			 }
 		ui.displayData(model.getData());
-		 if(model.GameOver()||model.GameWon()){
-			
-			CustomDialog D=new CustomDialog(ui.getBoard().getShell()){};
+		 if(model.GameOver()){
+			CustomDialog D=new CustomDialog(ui.getBoard().getShell());
 			if(model.GameWon())
 				D.setMessage("You Won \nyour Score is "+ model.GetScore());
 			else
@@ -155,26 +189,53 @@ public class Presenter implements Observer{
 				 model.LoadGame();
 			 ui.getBoard().SetScore(model.GetScore());
 			 ui.getBoard().SetMaxScore(model.getMaxScore());
-			 ui.getBoard().setFocus();}
+			 ui.Refresh();}
 			 else if(D.isNewGameFlag()){
 				 model.NewGame();
 				ui.getBoard().SetBoard(model.getData());
 				ui.getBoard().SetScore(0);
-				ui.getBoard().redraw();
+				ui.Refresh();
 				ui.getBoard().setFocus();}
 			 else if(D.isUndoGameFlag()){
 				 model.UndoMove();
 				ui.getBoard().SetBoard(model.getData());
 				ui.getBoard().SetScore(model.GetScore());
-				ui.getBoard().redraw();
+				ui.Refresh();
 				ui.getBoard().setFocus();}
 		}
-		 ui.getBoard().redraw();
+		 ui.Refresh();
 	
 	
 	
+	
+		}
+	/**
+	 * 
+	 * opens a file dialog and lets you pick the file you want to save to
+	 */
+		
+	private void Save() {
+		 String [] Extensions=new String[1];
+			Extensions[0]=".xml";
+			FileDialog FD=new FileDialog(ui.getBoard().getShell());
+			FD.setFilterExtensions(Extensions);
+			FD.open();
+			model.SaveGame(FD.getFilterPath()+"\\"+FD.getFileName());
+			ui.getBoard().SetScore(model.GetScore());
+			ui.getBoard().SetMaxScore(model.getMaxScore());
+			ui.getBoard().setFocus();
 	}
-		}}
+	/**
+	 * opens a file dialog and lets you pick the file you want to load from 
+	 */
+		public void Load(){
+			model.LoadGame();
+			 ui.getBoard().SetScore(model.GetScore());
+			 ui.getBoard().SetMaxScore(model.getMaxScore());
+			 ui.getBoard().setFocus();
+			
+		}
+	}
 	
 		
 		
