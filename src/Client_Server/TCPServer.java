@@ -32,7 +32,7 @@ public class TCPServer  {
 		int depth;
 		boolean WantsHint=false;
 		//Future<String>future=null;
-		ExecutorService threadPool=Executors.newFixedThreadPool(1);
+		ExecutorService threadPool=Executors.newFixedThreadPool(5);
 		CompletionService<String> CS=null;
 		
 	

@@ -24,6 +24,8 @@ public class Presenter implements Observer{
 	Model model;
 	String Hint=null;
 	TCPClient client=null;
+	int TreeHeight=-1; 
+	boolean AiSolving=false;
 	/**
 	 * 
 	 * 
@@ -61,6 +63,9 @@ public class Presenter implements Observer{
 	 */
 	@Override
 	public void update(Observable subject, Object arg1) {
+		if(subject.getClass().toString().contains("Model"))
+			if(arg1==null)
+			model.AddRandom();
 		int UserCommand=ui.getUserCommand();
 		if(UserCommand==13){
 			System.exit(1);
@@ -68,27 +73,23 @@ public class Presenter implements Observer{
 		}
 		if(UserCommand==2){//right
 			model.moveRight();
-			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 			}
 		else if(UserCommand==1){//left
 			
 			model.moveLeft();
-			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 		}
 		else if(UserCommand==3){//down
 		
 		model.moveDown();
-		model.AddRandom();
 		ui.getBoard().SetScore(model.GetScore());
 		ui.getBoard().SetMaxScore(model.getMaxScore());
 		}
 		else if(UserCommand==4){//up
 			model.moveUp();
-			model.AddRandom();
 			ui.getBoard().SetScore(model.GetScore());
 			ui.getBoard().SetMaxScore(model.getMaxScore());
 		 }
@@ -135,21 +136,36 @@ public class Presenter implements Observer{
 				 if(!client.isServerUp())
 					 client.Connect();
 				 
-				 if(client.isServerUp()){
-				 	Hint=client.Send2Server(model.getData(),model.GetScore(),7);
+				 if(client.isServerUp()&&!model.GameOver()&&!AiSolving){
+					 AiSolving =true;
+					 if(TreeHeight==-1){
+					 UserDataGui Select=new UserDataGui(ui.getBoard().getDisplay(),"AIhint");
+					 TreeHeight=(Select.getTreeHeight());}
+				 	Hint=client.Send2Server(model.getData(),model.GetScore(),TreeHeight);
 				 	if(Hint!=null)
 					switch(Hint){
-					case "RIGHT":{model.moveRight();break;}
-					case "LEFT":{model.moveLeft();break;}
-					case "UP":{model.moveUp();break;}
-					case "DOWN":{model.moveDown();break;}
+					case "RIGHT":{model.moveRight();
+					model.AddRandom();break;}
+					case "LEFT":{model.moveLeft();
+					model.AddRandom();break;}
+					case "UP":{model.moveUp();
+					model.AddRandom();break;}
+					case "DOWN":{model.moveDown();
+					model.AddRandom();break;}
 					}
+				 	
 					ui.getBoard().SetScore(model.GetScore());
 					ui.Refresh();
 				 }
 				 else{
 					 MessageBox Box=new MessageBox(new Shell());
+					 if(!model.GameOver())
 					 Box.setMessage("Server is down at the moment try later please");
+					 else if(model.GameOver())
+						 Box.setMessage("Game is Over Cant to that");
+					 else if(AiSolving){
+						 Box.setMessage("Currently Solving cant do that now");
+					 }
 					 Box.open();
 					 
 				 }
@@ -161,15 +177,18 @@ public class Presenter implements Observer{
 			 
 			 else if(UserCommand==14){
 				 //just play the solution
-				 if(!client.isServerUp())//if down 
+				 if(!client.isServerUp())//if server down 
 					 client.Connect();	//try to connect
-				 if(client.isServerUp){
+				 if(client.isServerUp&&!model.GameOver()){
 				 ui.getBoard().SetScore(model.GetScore());
-				 UserDataGui Select=new UserDataGui(ui.getBoard().getDisplay());
+				 UserDataGui Select=new UserDataGui(ui.getBoard().getDisplay(),"AIsolve");
 				 ui.AIPlayer(client,Select.getTreeHeight(),Select.getNumberOfMoves());}
 				 else{
 					 MessageBox Box=new MessageBox(new Shell());
+					 if(!model.GameOver())
 					 Box.setMessage("Server is down at the moment try later please");
+					 else
+						 Box.setMessage("Game is Over Cant do that");
 					 Box.open();
 					 
 				 }

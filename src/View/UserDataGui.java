@@ -14,8 +14,9 @@ import org.eclipse.swt.widgets.Text;
 /**
  * 
  * @author Lev veliki
+ * 
  * this class is made to get the tree depth and numberofmoves 
- * for the Ai Solution for the presenter
+ * Ai Solution That the presented activates
  *
  */
 
@@ -26,21 +27,27 @@ public class UserDataGui {
   Text textNumberOfMoves;
   int Treeheight;
   int NumberOfmoves;
-
-  private void init() {
+  boolean HeightSet=false ;
+  private void init(final String type) {
+	  if(type=="AIsolve"){
     (new Label(shell, SWT.NULL)).setText("Tree Depth");
-    
-    
     textTreeDepth = new Text(shell, SWT.SINGLE | SWT.BORDER);
-    textTreeDepth.setText("7");
-    textTreeDepth.setTextLimit(16);
-
+    textTreeDepth.setTextLimit(2);
     (new Label(shell, SWT.NULL)).setText("NumberOfMoves");
-    
     textNumberOfMoves = new Text(shell, SWT.SINGLE | SWT.BORDER);
+	  }else{
+		  (new Label(shell, SWT.NULL)).setText("Tree Depth");
+		    textTreeDepth = new Text(shell, SWT.SINGLE | SWT.BORDER);
+		    textTreeDepth.setTextLimit(2);
+	  }
+    
     Button OK = new Button(shell,SWT.PUSH);
     OK.setText("Done");
-    new Label(shell,SWT.DOWN).setText("Pick the Tree height And\n The Number of Moves you want to get");
+    if(type=="AIsolve")
+    new Label(shell,SWT.DOWN).setText("Enter the Tree height And\n The Number of Moves you want to get");
+    else{new Label(shell,SWT.DOWN).setText("Enter the Tree height for the hint calculation ");
+    	
+    }
     OK.addSelectionListener(new SelectionListener(){
 
 		@Override
@@ -49,26 +56,30 @@ public class UserDataGui {
 		public void widgetSelected(SelectionEvent arg0) {
 			try{
 			Treeheight=Integer.parseInt(textTreeDepth.getText());
-			NumberOfmoves=Integer.parseInt(textNumberOfMoves.getText());}
+			if(type=="AIsolve")
+			NumberOfmoves=Integer.parseInt(textNumberOfMoves.getText());
+			else {
+				NumberOfmoves=1;
+			}
+			}
 			catch(NumberFormatException e){
 				MessageBox B=new MessageBox(shell,SWT.NO_REDRAW_RESIZE);
 				B.setMessage("Enter Integers please");
 				B.open();
 			}
-			//System.out.println(Treeheight+" "+NumberOfmoves);
 			shell.dispose();
 		}});
   }  
   
-  public UserDataGui(Display display) {
+  public UserDataGui(Display display,String type) {
 	  this.display=display;
 	  this.shell=new Shell(display);
     shell.setLayout(new GridLayout(2, false));
     shell.setBounds(200, 200, 400, 170);
-    
-    init();
+    init(type);
     shell.setText("Control");
     textTreeDepth.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    if(type=="AIsolve")
     textNumberOfMoves.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     shell.open();
     // Set up the event loop.
@@ -88,5 +99,11 @@ public class UserDataGui {
   public int getNumberOfMoves(){
 		return NumberOfmoves;
 	}
+
+public void SetTreeHeight(int Treeheight) {
+	this.Treeheight=Treeheight;
+	HeightSet=true;
+	
+}
 
 }

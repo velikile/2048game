@@ -50,8 +50,8 @@ public class Game2048Model extends Observable implements Model,Serializable{
 			Data[r.nextInt(row)][r.nextInt(col)]=4;
 			Data[r.nextInt(row)][r.nextInt(col)]=2;}
 		else{
-			Data[r.nextInt(row)][r.nextInt(col)]=1024;
-			Data[r.nextInt(row)][r.nextInt(col)]=1024;
+			Data[r.nextInt(row)][r.nextInt(col)]=2;
+			Data[r.nextInt(row)][r.nextInt(col)]=2;
 		}
 		
 		
@@ -104,7 +104,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	}
 		
 	/**
-	 * The method is Moving all of the Tiles Up  and Notifies the observers
+	 * The method is Moving all of the Tiles Up 
 	 */
 	
 	@Override
@@ -149,14 +149,14 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Score+=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			
+ 			Notify();
  	}
 					
 					}
 	
 
 	/**
-	 * The method is Moving all of the Tiles Down and Notifies the observers
+	 * The method is Moving all of the Tiles Down 
 	 *   
 	 */
 	@Override
@@ -197,7 +197,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			
+ 			Notify();
 
 		}
 		
@@ -205,7 +205,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
 
 
 	/**
-	 * The method is Moving all of the Tiles left and notifies the observers 
+	 * The method is Moving all of the Tiles left  
 	 */
 	
 	@Override
@@ -246,12 +246,12 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			
+ 			Notify();
 
  	 	}
 	}
 	/**
-	 * The method is Moving all of the Tiles right and notifies the observers
+	 * The method is Moving all of the Tiles right
 	 */
 	@Override
 	public void moveRight() {
@@ -291,7 +291,7 @@ public class Game2048Model extends Observable implements Model,Serializable{
  			Scores[UndoList.size()-1]=ScoreToAdd;
  			if(Score>MaxScore)
  				MaxScore=Score;
- 			
+ 			Notify();
  		}
 	
 			
@@ -300,8 +300,8 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	}
 	
 	/**
-	 * @return int[][] 
-	 * returns the Data of the game board 
+	 * @return temp 
+	 * returns a Copy Data of the game board 
 	 * 
 	 */
 
@@ -364,7 +364,6 @@ public class Game2048Model extends Observable implements Model,Serializable{
 	/**
 	 * 
 	 * @return boolean
-	 * @param void
 	 * Check if The Game is Over,only returns a true when you lose the game  
 	 */
 
@@ -411,7 +410,7 @@ return false;
 /**
  * 
  * 
- * @param int [][]data
+ * @param data
  * @return boolean 
  * Checks whether the game board is equal to the data passed
  */
@@ -439,7 +438,7 @@ public boolean isEqual(int [][]data){
 }
 /**
  * 
- * @return integer 
+ * @return sum 
  * this is summing the the number of cubes 
  */
 public int getSum()
@@ -452,7 +451,7 @@ public int getSum()
 }
 
 /**
- * @return 
+ * 
  * @param int score
  * Setting the score manually 
  */
@@ -461,8 +460,8 @@ public void setScore(int score) {
 }
 /**
  * 
- * @param Model
- * @return true
+ * @param M
+ * @return boolean
  * return true if The game Board is equal to the objects Board
  */
 public boolean equals(Game2048Model M){
@@ -471,7 +470,7 @@ public boolean equals(Game2048Model M){
 	else return false;	
 	}
 /**
- * @return 
+ * 
  * Starts a new Game
  */
 
@@ -509,7 +508,7 @@ public void Notify() {
 }
 
 /**
- * @return int 
+ * @return Score
  * returns the Score of the game
  */
 @Override
@@ -518,7 +517,7 @@ public int GetScore() {
 }
 
 /**
- * @return int 
+ * @return MaxScore 
  * returns the Best Score so far 
  */
 @Override
@@ -551,12 +550,14 @@ public boolean LoadGame() {
 	catch(Exception e){
 		return false;
 	}
+	this.setChanged();
+	this.notifyObservers("Load");
 	
 	return true;
 }
 /**
  * 
- * @param int []Scores
+ * @param Scores
  * setting the Scores array to the one passed
  */
 private void setScores(int[] Scores) {
@@ -564,7 +565,7 @@ private void setScores(int[] Scores) {
 	
 }
 /** 
- * Undo the last move made and notify observes
+ * Undo the last move made and notifies observes
  */
 @Override
 public void UndoMove() {
@@ -601,7 +602,7 @@ public boolean SaveGame(String string) {
 }
 /**
  * 
- * @return Stack<int[][]>
+ * @return UndoList
  * returns all of the game States so far in a Stack organized fashion
  */
 public Stack<int[][]> getUndoList() {
@@ -609,7 +610,7 @@ public Stack<int[][]> getUndoList() {
 	return UndoList;
 }
 /**
- * @return int[]
+ * @return Scores
  * returns the Score array for the game 
  */
 public int[] getScores() {
@@ -625,7 +626,7 @@ public void setWinFlag(boolean winFlag) {
 	WinFlag = winFlag;
 }
 /**
- * @return String[]
+ * @return Moves
  * returns a String array with all of the available moves from the current state
  */
 @Override
@@ -653,7 +654,7 @@ public String []GetAvailableMoves() {
 		}
 /**
  * 
- * @param int [][]
+ * @param data2
  * Setting the Game Board to the data passed
  */
 public void SetData(int[][] data2) {
@@ -674,13 +675,7 @@ public boolean GameWon() {
 if(WinFlag)
 	return true;
 return false;
-}	
-
-
-
-				
-	
-
+}
 	
 }
 
