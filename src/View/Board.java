@@ -45,33 +45,33 @@ public Board(final Composite parent,int style){
 	parent.setSize(660,600);
 	parent.setLocation(100,100);
 addPaintListener(new PaintListener(){
-	Image Tile2=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/2.gif");
+	Image Tile2=new Image(getDisplay(),"src/2048Art/2.gif");
 	Image Tile2new;
-	Image Tile4=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/4.gif");
+	Image Tile4=new Image(getDisplay(),"src/2048Art/4.gif");
 	Image Tile4new;
-	Image Tile8=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/8.gif");
+	Image Tile8=new Image(getDisplay(),"src/2048Art/8.gif");
 	Image Tile8new;
-	Image Tile16=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/16.gif");
+	Image Tile16=new Image(getDisplay(),"src/2048Art/16.gif");
 	Image Tile16new;
-	Image Tile32=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/32.gif");
+	Image Tile32=new Image(getDisplay(),"src/2048Art/32.gif");
 	Image Tile32new;
-	Image Tile64=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/64.gif");
+	Image Tile64=new Image(getDisplay(),"src/2048Art/64.gif");
 	Image Tile64new;
-	Image Tile128=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/128.gif");
+	Image Tile128=new Image(getDisplay(),"src/2048Art/128.gif");
 	Image Tile128new;
-	Image Tile256=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/256.gif");
+	Image Tile256=new Image(getDisplay(),"src/2048Art/256.gif");
 	Image Tile256new;
-	Image Tile512=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/512.gif");
+	Image Tile512=new Image(getDisplay(),"src/2048Art/512.gif");
 	Image Tile512new;
-	Image Tile1024=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/1024.gif");
+	Image Tile1024=new Image(getDisplay(),"src/2048Art/1024.gif");
 	Image Tile1024new;
-	Image Tile2048=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/2048.gif");
+	Image Tile2048=new Image(getDisplay(),"src/2048Art/2048.gif");
 	Image Tile2048new;
-	Image Tile4096=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/4096.gif");
+	Image Tile4096=new Image(getDisplay(),"src/2048Art/4096.gif");
 	Image Tile4096new;
-	Image Tile8192=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/8192.gif");
+	Image Tile8192=new Image(getDisplay(),"src/2048Art/8192.gif");
 	Image Tile8192new;
-	Image Tile16384=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/2048Art/16384.gif");
+	Image Tile16384=new Image(getDisplay(),"src/2048Art/16384.gif");
 	Image Tile16384new;
 	@Override
 	public void paintControl(PaintEvent e) {

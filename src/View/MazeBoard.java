@@ -66,11 +66,11 @@ public class MazeBoard extends Board {
 				
 			}});
 		addPaintListener(new PaintListener(){
-			Image cheese=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/cheese.gif");
+			Image cheese=new Image(getDisplay(),"src/cheese.gif");
 			Image cheese2;
 			
 		
-			Image mouse=new Image(getDisplay(),"c:/Users/SAMSUNG/workspace/Game/src/mouse.gif");
+			Image mouse=new Image(getDisplay(),"src/mouse.gif");
 			Image mouse2;//=new Image(getDisplay(),mouse.getImageData().scaledTo(width/21-1,height/21-1));
 			@Override
 			public void paintControl(PaintEvent e) {

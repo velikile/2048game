@@ -13,24 +13,25 @@ public int [][] M;
  
 @SuppressWarnings("unused")
 public Maze() throws InterruptedException{
-if(Global.CheeseX>Global.Col_maze||Global.CheeseY>Global.Row_maze)
-	throw new InterruptedException("Invalid Cheese Spot"); 
-if(Global.MiceX>Global.Col_maze||Global.MiceY>Global.Row_maze)
-	throw new InterruptedException("Invalid Mice Spot"); 
-this.row=Global.Row_maze;
-this.col=Global.Col_maze;
-M=new int[row][col];
-for(int i=0;i<row;i++)
-	for (int j=0;j<col;j++)
-	{   if(i==Global.MiceY && j==Global.MiceX){
-		M[i][j]=1;
-		sst.setSpot(new Spot(j,i));
-		sst.setData(sst.getSpot().toString());
-		}
-		if(i==2&&j>0&&j<col-2&&j!=5)//creating a wall 
-			M[i][j]=-1;
-		if(i==0 &&j!=Global.CheeseX+1 )
-			M[i][j]=-1;
+	
+	if(Global.CheeseX>Global.Col_maze||Global.CheeseY>Global.Row_maze)
+		throw new InterruptedException("Invalid Cheese Spot"); 
+	if(Global.MiceX>Global.Col_maze||Global.MiceY>Global.Row_maze)
+		throw new InterruptedException("Invalid Mice Spot"); 
+	this.row=Global.Row_maze;
+	this.col=Global.Col_maze;
+	M=new int[row][col];
+	for(int i=0;i<row;i++)
+		for (int j=0;j<col;j++)
+		{   if(i==Global.MiceY && j==Global.MiceX){
+			M[i][j]=1;
+			sst.setSpot(new Spot(j,i));
+			sst.setData(sst.getSpot().toString());
+			}
+			if(i==2&&j>0&&j<col-2&&j!=5)//creating a wall 
+				M[i][j]=-1;
+			if(i==0 &&j!=Global.CheeseX+1 )
+				M[i][j]=-1;
 		if(j==0&&i>0&&i<row)
 			M[i][j]=-1;
 		if(j==15)//creating a wall 
