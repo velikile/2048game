@@ -66,35 +66,41 @@ public class MazeBoard extends Board {
 				
 			}});
 		addPaintListener(new PaintListener(){
-			Image cheese=new Image(getDisplay(),"src/cheese.gif");
+			Image cheese=new Image(getDisplay(),"src/MazeArt/cheese.gif");
 			Image cheese2;
 			
 		
-			Image mouse=new Image(getDisplay(),"src/mouse.gif");
+			Image mouse=new Image(getDisplay(),"src/MazeArt/mouse.gif");
 			Image mouse2;//=new Image(getDisplay(),mouse.getImageData().scaledTo(width/21-1,height/21-1));
 			@Override
 			public void paintControl(PaintEvent e) {
-				int width=getParent().getBounds().width;
-				int height=getParent().getBounds().height;
-				mouse2=new Image(getDisplay(),mouse.getImageData().scaledTo(width/21-1,height/21-1));
-				cheese2=new Image(getDisplay(),cheese.getImageData().scaledTo(width/21-1,height/21-1));
+				int width=(int) (getParent().getBounds().width/(1.05*M.getCol()));
+				int height=(int) (getParent().getBounds().height/(1.078*M.getRow()));
+				mouse2=new Image(getDisplay(),mouse.getImageData().scaledTo(width,height));
+				cheese2=new Image(getDisplay(),cheese.getImageData().scaledTo(width,height));
 				int [][]data=M.GetData();
 				   for(int i=0;i<data.length;i++)
 					   for (int j=0;j<data[0].length;j++){
 						   if(M.getValue(i, j)==-1){
 							   e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK)); 
-							   e.gc.fillRectangle(i*width/21+1,j*height/21+1,width/21-1,height/21-1);}
+							   e.gc.fillRectangle(i*width,j*height,width,height);}
+						   
 							   else if(M.getValue(i, j)==1){
-								   e.gc.drawImage(mouse2,i*width/21 ,j*height/21+1);
-							   if(mousex>i*width/23&&mousex<i*width/23+width/5&&mousey>j*height/23&&mousey<j*height/23+height/5)
-								   mouseInBoundflag=true;
-							   else if(mouseflag)
-								   mouseInBoundflag=false;
+								   e.gc.drawImage(mouse2,i*width ,j*height);
+								   
+								   if(mousex>i*width/23&&mousex<i*width/23+width/5&&mousey>j*height/23&&mousey<j*height/23+height/5)
+									   mouseInBoundflag=true;
+								   else if(mouseflag)
+									   mouseInBoundflag=false;
 							   
 							  
 							   }
+						   if(M.getValue(i, j)==5){
+							   e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE)); 
+							   e.gc.fillRectangle(i*width,j*height,width,height);}
+						   
 							   else if(data[j][i]==2){
-								   e.gc.drawImage(cheese2,i*width/21 ,j*height/21+1);
+								   e.gc.drawImage(cheese2,i*width ,j*height);
 				
 					if(mousex!=-1&&mousey!=-1&&mouseflag==true){
 						if(mouse2!=null&&mouseInBoundflag){
@@ -107,8 +113,8 @@ public class MazeBoard extends Board {
 				   cheese2.dispose();
 				   mouse2.dispose();}
 					 e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-					e.gc.drawText("The score is: "+Score , 30,22*height/29+10);
-					e.gc.drawText("The BEST score is: "+ MaxScore , 150,22*height/29+10);
+					//e.gc.drawText("The score is: "+Score , 30,22*height/29+10);
+					//e.gc.drawText("The BEST score is: "+ MaxScore , 150,22*height/29+10);
 					//e.gc.dispose();
 				
 			}});

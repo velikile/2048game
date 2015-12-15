@@ -8,10 +8,13 @@ import java.util.Stack;
 
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+
 import Model.Model;
 import Mazepack.Maze;
+import Mazepack.MazeGen;
 import Mazepack.Spot;
 import Mazepack.State;
 public class GameMazeModel extends Observable implements Model {
@@ -24,16 +27,40 @@ public class GameMazeModel extends Observable implements Model {
 	private Stack<String> UndoList=new Stack<String>();//this holds all of the moves so far in the game 
 	private boolean WinFlag;//  a flag to see if the game is won 
 	
-	public GameMazeModel(){
-		try {
-			maze=new Maze();
-			now=maze.getSstate();
-			goal=maze.getGstate();
-			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public String toString(){
+		boolean first=true;
+		 String TempString =new String();
+		 int [][]Data=maze.GetData();
+		 
+		for (int a[]:Data)
+		{
+			if(first)
+			{
+				first=false;
+			}
+			else 
+				TempString=TempString.concat("\n");
+			for (int b:a)
+			{
+				TempString=TempString.concat(Integer.toString(b)+"  ");
+				
+			}
 		}
+		return TempString;
+		
+	}
+	public GameMazeModel(){
+		GenerateNewMaze();
+	}
+	
+	
+	public void GenerateNewMaze(){
+		MazeGen Gen=new MazeGen();
+		MazeGen.Maze Tempmaze=Gen.new Maze(20,20);
+		Tempmaze.GenerateMaze();
+		maze=new Maze(Tempmaze.GetArray());
+		now=maze.getSstate();
+		goal=maze.getGstate();
 	}
 		
 	/**
@@ -170,7 +197,14 @@ public class GameMazeModel extends Observable implements Model {
 	public boolean GameOver() {
 		if(maze.getSstate().isEqual(goal)){
 			WinFlag=true;
-			return true;}
+			return true;
+			}
+		int currentX=maze.getSstate().getSpot().getx();
+		int currentY=maze.getSstate().getSpot().gety();
+		if(maze.GetData()[currentY][currentX]==5)
+			return true;
+			
+				
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -183,18 +217,8 @@ public class GameMazeModel extends Observable implements Model {
 	 */
 	@Override
 	public void NewGame() {
-		try {
-			maze=new Maze();
-			now=maze.getSstate();
-			goal=maze.getGstate();
-			Score=0;
-			this.UndoList=new Stack<String>();
-			
-			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		GenerateNewMaze();
+		this.UndoList=new Stack<String>();
 		
 	}
 

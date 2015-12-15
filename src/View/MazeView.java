@@ -59,8 +59,9 @@ public class MazeView extends Observable implements View,Runnable {
 	 */
 	@Override
 	public void displayData(final int[][] data) {
+		if(!mazeboard.isDisposed()){
 		mazeboard.SetBoard(data);
-			mazeboard.redraw();	
+			mazeboard.redraw();	}
 			}
 
 	/**
@@ -127,9 +128,15 @@ public class MazeView extends Observable implements View,Runnable {
  * start the gui components
  */
 	private void initComponents(){
-			shell = new Shell();
+		if(null==Display.getDefault().getActiveShell())
+			shell =new Shell();
+		else{
+			
+			shell=Display.getDefault().getActiveShell();
+		}
+			if(shell!=null){
 			shell.setLayout(new GridLayout(2, false));
-			shell.setSize(450, 450);
+			shell.setSize(500, 500);
 			shell.setText("My Maze");
 			Menu menuBar=new Menu(shell,SWT.BAR);
 			MenuItem csFileMenu=new MenuItem(menuBar,SWT.CASCADE);
@@ -193,7 +200,7 @@ public class MazeView extends Observable implements View,Runnable {
 			shell.setMenuBar(menuBar);
 
 			display=Display.getDefault();
-			mazeboard= new MazeBoard(shell, SWT.BORDER);
+			mazeboard= new MazeBoard(shell, SWT.DOUBLE_BUFFERED);
 			mazeboard.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true, 1,2));
 			newGameButton=new Button(shell, SWT.PUSH);
 			newGameButton.setText("New game");
@@ -272,7 +279,11 @@ public class MazeView extends Observable implements View,Runnable {
 
 						@Override
 						public void run() {
+								Thread.currentThread().setName("KeyStrokeTimer");
+							if(display.isDisposed()){
 								
+								T.cancel();
+							}
 								if(!keys.isEmpty()){
 								temp=keys.pop();
 								key=temp.keyCode;}
@@ -388,7 +399,7 @@ public class MazeView extends Observable implements View,Runnable {
 
 			});
 			Notify();//This is made for the Display refresh 
-			
+	}
 			
 	}
 
@@ -397,16 +408,18 @@ public class MazeView extends Observable implements View,Runnable {
 	 */
 	@Override
 	public void run() {
-		
+		Thread.currentThread().setName("ViewThread");
 				initComponents();
+				if(shell!=null){
 				shell.open();
 				while(!shell.isDisposed()){
 					if(!display.readAndDispatch())
 						display.sleep();	
 				}
-					display.dispose();
-					T.cancel();
-			}
+		
+					T.cancel();	
+				
+			}}
 	/**
 	 * notifies the observers 				
 	 */

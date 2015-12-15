@@ -5,11 +5,11 @@ import java.util.Random;
 public class Maze  {
 	
 	
-public int [][] M;
- private int row;
- private int col;
- private State sst=new State();
- private State gst=new State();
+public int [][] M;//this hold the data for the maze board
+ private int row; // the height of the maze
+ private int col;//the width of the maze 
+ private State sst=new State();//start spot
+ private State gst=new State();//goal spot 
  
 @SuppressWarnings("unused")
 public Maze() throws InterruptedException{
@@ -155,6 +155,7 @@ public Maze(Maze maze,State start,State goal){//ctor
 				}
 }
 	}
+
 
 
 	public void Setlocations(){//sets the locations of the current position and the target position
